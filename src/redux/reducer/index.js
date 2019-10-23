@@ -3,18 +3,22 @@ import * as actionTypes from "../actionTypes";
 const applicationIntialState = {
   posts: [],
   questions: [],
-  post:{
-    index:1,
-    post_id:'',
-    post_name:'',
-    threshold:0,
-    created_by:'',
-    updated_by:''
+  post: {
+    index: 1,
+    post_id: '',
+    post_name: '',
+    threshold: 0,
+    created_by: '',
+    updated_by: ''
   },
   toggleDialog: {
     openDialog: false,
     buttonName: "",
     title: ""
+  },
+  candidatePost: [],
+  candidatePost_Map: {
+    post_id: [], user_id: [], created_by: ''
   },
   question: {
     index: 1,
@@ -49,9 +53,16 @@ const reducer = (state = applicationIntialState, action) => {
         ...state,
         [question]: val
       };
+    case actionTypes.HANDLE_ON_CANDIDATEPOST:
+      var { candidatePost } = state;
+      var { candidatePost, postMapValue } = action.payload;
+      return {
+        ...state,
+        [candidatePost]: postMapValue
+      };
 
     case actionTypes.HANDLE_ON_TOGGLE_DIALOG:
-      var { toggleDialog, question, questions, post, posts } = state;
+      var { toggleDialog, question, questions, post, posts, candidatePost_Map, candidatePost } = state;
       var { openDialog, buttonName, title } = toggleDialog;
       var { buttonName, title, index } = action.payload;
       openDialog = !openDialog;
@@ -68,12 +79,17 @@ const reducer = (state = applicationIntialState, action) => {
             index
           };
           debugger;
-        } else if(title== "Update Post"){
+        } else if (title == "Update Post") {
           post = {
             ...posts[index],
             index
           };
 
+        } else if (title == "Update CandidatePostMap") {
+          candidatePost_Map = {
+            ...candidatePost[index],
+            index
+          }
         }
       }
       debugger;
@@ -83,7 +99,7 @@ const reducer = (state = applicationIntialState, action) => {
         question,
         posts,
         post,
-        questions
+        questions, candidatePost_Map, candidatePost
       };
       debugger;
 
@@ -122,11 +138,11 @@ const reducer = (state = applicationIntialState, action) => {
       } else {
         options.push("");
       }
-      let question2=[];
-options=question2.concat(options);
+      let question2 = [];
+      options = question2.concat(options);
 
       return {
-        ...state,question:{
+        ...state, question: {
           ...question,
           options
         }
@@ -134,12 +150,12 @@ options=question2.concat(options);
     case actionTypes.HANDLE_CHANGE_OPTION:
       var { o_index, val_ue } = action.payload;
       var { question } = state;
-      var {options}=question;
+      var { options } = question;
       question.options[o_index] = val_ue;
-      let question1=[];
-options=question1.concat(options);
+      let question1 = [];
+      options = question1.concat(options);
       return {
-        ...state,question:{
+        ...state, question: {
           ...question,
           options
         }

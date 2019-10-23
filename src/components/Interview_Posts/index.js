@@ -33,9 +33,7 @@ class Interview_Posts extends React.Component {
     const { questions } = this.props;
     axios.delete(`http://localhost:8080/api/post/${uuid}`).then(result => {
       console.log(result.data);
-      axios.delete("http://localhost:8080/api/post").then(response => {
-        console.log(response.data);
-      });
+      
       debugger;
     });
     return axios.get(`http://localhost:8080/api/post`).then(response=>console.log(response.data))

@@ -8,6 +8,7 @@ import Home from './components/Home';
 import {Provider} from 'react-redux';
 import store from './redux/store';
 import SpinnerComponent from './components/SpinnerComponent';
+import CandidatePostMap from './components/CandidatePostMap/index';
 
 function App() {
   return (
@@ -16,9 +17,9 @@ function App() {
       <Router>
       <Provider store={store} >
         <Route exact path="/" component={Home} />
-
       <Route exact path="/posts" component={Interview_Posts} />
         <Route exact path="/posts/questions" component={ Question_section} />
+        <Route exact path="/candidatepostmap" component={ CandidatePostMap} />
       </Provider>
       </Router>
     </div>

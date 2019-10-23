@@ -26,7 +26,7 @@ import axios from "axios";
 class Create_Update_Post extends React.Component {
   handleOnCreatePost = () => {
     var { post } = this.props;
-    const uuid = require("uuidv4").default;
+    const uuid = require("uuid/v4").default;
     axios
       .post("http://localhost:8080/api/post", {
         uuid: uuid(),
