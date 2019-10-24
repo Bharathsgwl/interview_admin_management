@@ -1,5 +1,4 @@
 import React from "react";
-import "./index.css";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
@@ -19,7 +18,6 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
-import FormatListBulletedIcon from "@material-ui/icons/FormatListBulleted";
 import Collapse from "@material-ui/core/Collapse";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
@@ -27,12 +25,21 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { Grid, Button } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-
 import { withRouter } from "react-router-dom";
-
+import {
+  handleDrawerOpen,
+  handleDrawerClose,
+  handleOnPostClick,
+  handleOnQuestionClick,
+  handleOnCandidatePostClick,
+  handleOnResultClick,
+  handleOnPosts,handleOnQuestions,handleOnInstructionClick
+} from "../../redux/actions";
+import Instructions_Component from "../Instructions_Component";
+import Interview_Posts from "../Interview_Posts";
+import Question_section from "../Question_section";
+import axios from "axios";
 const drawerWidth = 240;
-
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -112,19 +119,78 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Menu = props => {
+  debugger;
   const {
     open,
-    handleDrawerOpen=()=>{},
-    handleDrawerClose=()=>{},
-    handleUserOnClick=()=>{},
-    handleActionsOnClick=()=>{},
-    handleRolesOnClick=()=>{},
-    handleRoleActionOnClick=()=>{},
-    onClickLogout=()=>{},
-    history
+    handleDrawerOpen,
+    handleDrawerClose,
+    handleOnPostClick = () => {},
+    handleOnCandidatePostClick = () => {},
+    handleOnQuestionClick = () => {},
+    handleOnResultClick = () => {},
+    handleOnInstructionClick=()=>{},
+    onClickLogout,
+    history,
+    actionList,
+    setHandleUserManagementAction,
+    setSnackbarMessage
   } = props;
+  debugger;
   const classes = useStyles();
   const theme = useTheme();
+
+  const getComponent = componentName => {
+    if (componentName) {
+      import(`./${componentName}`).then(module => {
+        console.log(module, "module");
+
+        return { Component: module.default };
+      });
+    }
+    return {};
+  };
+  const displayPosts = () => {
+    let { handleOnPosts, history } = props;
+    axios
+      .get("https://tranquil-wildwood-09825.herokuapp.com/api/post")
+      .then(response => {
+        let post_s = response.data.posts.map(p => p);
+        props.handleOnPosts("posts", post_s);
+      });
+    return handleOnPostClick(history);
+  };
+  const  displayInstructions=()=>{
+      var { handleOnQuestions,history,instructions } = props;
+      let instruction_s = [];
+      axios
+        .get("https://tranquil-wildwood-09825.herokuapp.com/api/exam_rules")
+        .then(response => {
+          instruction_s = response.data.posts.map(q => q);
+          props.handleOnQuestions("instructions", instruction_s);
+        });
+        return handleOnInstructionClick(history);
+    }
+const  displayQuestions=()=>{
+    var { handleOnQuestions,history,questions } = props;
+    let question_s = [];
+    axios
+      .get("https://tranquil-wildwood-09825.herokuapp.com/api/question_section")
+      .then(response => {
+        question_s = response.data.posts.map(q => q);
+        props.handleOnQuestions("questions", question_s);
+      });
+      return handleOnQuestionClick(history);
+  }
+const  displayCandidatePostMaps = () => {
+      var { handleOnCandidatePost } = this.props;
+      let candidatePostMap_s = []
+      axios
+          .get("http://localhost:8080/api/candidate_post_map")
+          .then(response => {
+              let candidatePostMap_s = response.data.candidate_post_map.map(p => p);
+              this.props.handleOnCandidatePost("candidatePost", candidatePostMap_s);
+          });
+  };
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -146,7 +212,7 @@ const Menu = props => {
               >
                 <MenuIcon />
               </IconButton>
-
+              ​
               <Grid item md={11}>
                 <Typography
                   style={{ fontFamily: '"Apple Color Emoji"' }}
@@ -157,7 +223,7 @@ const Menu = props => {
                   GoodWorks Colloquio
                 </Typography>
               </Grid>
-
+              ​
               <Grid item md={1}>
                 <Typography variant="h6" color="inherit" noWrap>
                   <Button
@@ -194,18 +260,22 @@ const Menu = props => {
         </div>
         <Divider />
         <List>
-          <ListItem button onClick={() => handleRolesOnClick(history)}>
-            <ListItemText inset primary="Roles" />
+          <ListItem button onClick={() => displayPosts()} style={{paddingRight: "100px"}}>
+            <ListItemText inset primary="Post" />
           </ListItem>
-          <ListItem button onClick={() => handleActionsOnClick(history)}>
-            <ListItemText inset primary="Actions" />
+          <ListItem button onClick={() => displayInstructions()}>
+            <ListItemText inset primary="Instructions" />
           </ListItem>
-          <ListItem button onClick={() => handleRoleActionOnClick(history)}>
-            <ListItemText inset primary="Role Action" />
+          <ListItem button onClick={() => handleOnCandidatePostClick(history)}>
+            <ListItemText inset primary="Candidate_Post_Map" />
           </ListItem>
-          <ListItem button onClick={() => handleUserOnClick(history)}>
-            <ListItemText inset primary="Create User" />
+          <ListItem button onClick={() => displayQuestions()}>
+            <ListItemText inset primary="question" />
           </ListItem>
+          <ListItem button onClick={() => handleOnResultClick(history)}>
+            <ListItemText inset primary="Result" />
+          </ListItem>
+          ​
         </List>
       </Drawer>
       <main
@@ -215,39 +285,40 @@ const Menu = props => {
       >
         <div className={classes.drawerHeader} />
         <Typography>
-
-          
+          <Route exact path="/menu/post" component={Interview_Posts} />
+          <Route exact path="/menu/question" component={Question_section} />
+          <Route exact path="/menu/instruction" component={Instructions_Component} />
         </Typography>
       </main>
     </div>
   );
 };
 
-const mapStateToProps = ({ open }) => {
+const mapStateToProps = ({ open, actionList, history, posts,instructions }) => {
   return {
-    open
+    open,
+    actionList,
+    history,
+    posts,instructions
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
-    onClickLogout: history => dispatch(onClickLogout(history)),
+    // onClickLogout: histhistoryory => dispatch(onClickLogout(history)),
+    handleOnPostClick: history => dispatch(handleOnPostClick(history)),
+    handleOnQuestionClick: history => dispatch(handleOnQuestionClick(history)),
     handleDrawerOpen: () => dispatch(handleDrawerOpen()),
     handleDrawerClose: () => dispatch(handleDrawerClose()),
-    handleUserOnClick: history => {
-      dispatch(handleUserOnClick(history));
+    handleOnInstructionClick:history=>dispatch(handleOnInstructionClick(history)),
+    handleOnPosts: (post, value) => {
+      dispatch(handleOnPosts(post, value));
     },
-    handleActionsOnClick: history => {
-      dispatch(handleActionsOnClick(history));
-    },
-    handleRoleActionOnClick: history => {
-      dispatch(handleRoleActionOnClick(history));
-    },
-    handleRolesOnClick: history => {
-      dispatch(handleRolesOnClick(history));
-    },
+    handleOnQuestions: (question, val) => {
+      dispatch(handleOnQuestions(question, val));
+    }
+
   };
 };
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps
