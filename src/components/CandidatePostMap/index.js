@@ -23,16 +23,7 @@ import Create_Update_Post from "./Create_Update_Post";
 
 class CandidatePostMap extends React.Component {
 
-    displayCandidatePostMaps = () => {
-        var { handleOnCandidatePost } = this.props;
-        let candidatePostMap_s = []
-        axios
-            .get("http://localhost:8080/api/candidate_post_map")
-            .then(response => {
-                let candidatePostMap_s = response.data.posts.map(p => p);
-                this.props.handleOnCandidatePost("candidatePost", candidatePostMap_s);
-            });
-    };
+  
 
     displayPosts = () => {
         let { handleOnPosts } = this.props;
@@ -64,8 +55,6 @@ class CandidatePostMap extends React.Component {
         } = this.props;
         return (
             <Grid container>
-                <Button color="primary" onClick={this.displayCandidatePostMaps}>Candidate Post</Button>
-                <Button color="primary" onClick={this.displayPosts}>Post</Button>
                 <Grid item md={12} className="icon">
                     <AddCircleIcon
                         button

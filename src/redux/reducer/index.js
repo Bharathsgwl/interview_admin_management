@@ -3,14 +3,16 @@ import * as actionTypes from "../actionTypes";
 const applicationIntialState = {
   posts: [],
   questions: [],
+  open: false,
   post: {
     index: 1,
-    post_id: '',
-    post_name: '',
+    post_id: "",
+    post_name: "",
     threshold: 0,
-    created_by: '',
-    updated_by: ''
+    created_by: "",
+    updated_by: ""
   },
+  instructions:[],
   toggleDialog: {
     openDialog: false,
     buttonName: "",
@@ -84,12 +86,6 @@ const reducer = (state = applicationIntialState, action) => {
             ...posts[index],
             index
           };
-
-        } else if (title == "Update CandidatePostMap") {
-          candidatePost_Map = {
-            ...candidatePost[index],
-            index
-          }
         }
       }
       debugger;
@@ -142,7 +138,8 @@ const reducer = (state = applicationIntialState, action) => {
       options = question2.concat(options);
 
       return {
-        ...state, question: {
+        ...state,
+        question: {
           ...question,
           options
         }
@@ -155,11 +152,54 @@ const reducer = (state = applicationIntialState, action) => {
       let question1 = [];
       options = question1.concat(options);
       return {
-        ...state, question: {
+        ...state,
+        question: {
           ...question,
           options
         }
       };
+    case actionTypes.HANDLE_DRAWER_OPEN:
+      var { open } = state.open;
+      return {
+        ...state,
+        open: true
+      };
+    case actionTypes.HANDLE_DRAWER_CLOSE:
+      var { open } = state.open;
+      return {
+        ...state,
+        open: false
+      };
+    case actionTypes.HANDLE_ON_POST_CLICK:
+      var { history } = action.payload;
+      history.push("/menu/post");
+      return {
+        ...state
+      };
+    case actionTypes.HANDLE_ON_CANDIDATE_POST_MAP_CLICK:
+      var { history } = action.payload;
+      history.push("menu/Candidate_Post_Map");
+      return {
+        ...state
+      };
+    case actionTypes.HANDLE_ON_QUESTION_CLICK:
+      var { history } = action.payload;
+      history.push("/menu/question");
+      return {
+        ...state
+      };
+    case actionTypes.HANDLE_ON_RESULT_CLICK:
+      var { history } = action.payload;
+      history.push("menu/result");
+      return {
+        ...state
+      };
+      case actionTypes.HANDLE_ON_INSTRUCTION_CLICK:
+        var { history } = action.payload;
+        history.push("/menu/instruction");
+        return {
+          ...state
+        };
     default:
       return state;
   }
