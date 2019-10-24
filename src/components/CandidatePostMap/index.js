@@ -27,7 +27,7 @@ class CandidatePostMap extends React.Component {
         var { handleOnCandidatePost } = this.props;
         let candidatePostMap_s = []
         axios
-            .get("https://tranquil-wildwood-09825.herokuapp.com/api/candidate_post_map")
+            .get("http://localhost:8080/api/candidate_post_map")
             .then(response => {
                 let candidatePostMap_s = response.data.posts.map(p => p);
                 this.props.handleOnCandidatePost("candidatePost", candidatePostMap_s);
@@ -46,7 +46,7 @@ class CandidatePostMap extends React.Component {
 
     deleteCandidatePostMap = (e, uuid) => {
         debugger;
-        axios.delete(`https://tranquil-wildwood-09825.herokuapp.com/api/candidate_post_map/${uuid}`).then(result => {
+        axios.delete(`http://localhost:8080/api/candidate_post_map/${uuid}`).then(result => {
             console.log(result.data);
             debugger;
         });
@@ -123,7 +123,7 @@ class CandidatePostMap extends React.Component {
                                                 >
                                                     {" "}
                                                     Delete
-                        </Button>
+                                                </Button>
                                             </TableCell>
                                         </TableRow>
                                     );
