@@ -12,7 +12,15 @@ const applicationIntialState = {
     created_by: "",
     updated_by: ""
   },
-  instructions:[],
+  instructions: [],
+  instruction: {
+    index: 1,
+    rule_name: "",
+    priority: [],
+    priority1: ["Low", "Medium", "High" ],
+    created_by: "",
+    updated_by: ""
+  },
   toggleDialog: {
     openDialog: false,
     buttonName: "",
@@ -86,6 +94,10 @@ const reducer = (state = applicationIntialState, action) => {
             ...posts[index],
             index
           };
+        } else {
+          candidatePost_Map = {
+            ...candidatePost[index], index
+          }
         }
       }
       debugger;
@@ -178,7 +190,7 @@ const reducer = (state = applicationIntialState, action) => {
       };
     case actionTypes.HANDLE_ON_CANDIDATE_POST_MAP_CLICK:
       var { history } = action.payload;
-      history.push("menu/Candidate_Post_Map");
+      history.push("/menu/Candidate_Post_Map");
       return {
         ...state
       };
@@ -194,12 +206,12 @@ const reducer = (state = applicationIntialState, action) => {
       return {
         ...state
       };
-      case actionTypes.HANDLE_ON_INSTRUCTION_CLICK:
-        var { history } = action.payload;
-        history.push("/menu/instruction");
-        return {
-          ...state
-        };
+    case actionTypes.HANDLE_ON_INSTRUCTION_CLICK:
+      var { history } = action.payload;
+      history.push("/menu/instruction");
+      return {
+        ...state
+      };
     default:
       return state;
   }

@@ -39,7 +39,25 @@ class Create_Update_Post extends React.Component {
       });
     this.props.handleOnToggleDialog();
   };
-  handleOnUpdatePost = () => {};
+  handleOnUpdatePost = () => {
+    
+    var {post}=this.props;
+    var {uuid,post_name, threshold} = post;
+    console.log("APMAN", uuid, post_name, threshold);
+    debugger
+    axios.put(`http://localhost:8080/api/post`, {
+      post_name: post_name,
+      threshold:threshold,
+      updated_by: "GWLADMIN124",
+      uuid: uuid
+    })
+    .then(response => {
+      debugger;
+      console.log(response.data, "res");
+      debugger;
+    })
+    this.props.handleOnToggleDialog();
+  };
   handleClose = () => {
     this.props.handleOnToggleDialog();
   };

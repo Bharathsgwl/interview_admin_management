@@ -40,6 +40,16 @@ class Instructions_Component extends React.Component {
   //   });
   //   return axios.get(`http://localhost:8080/api/post`).then(response=>console.log(response.data))
   // };
+
+  deleteInstruction = (e, uuid) => {
+    debugger;
+    axios.delete(`http://localhost:8080/api/exam_rules/${uuid}`).then(result => {
+        console.log(result.data);
+        debugger;
+    });
+    // return axios.get(`https://tranquil-wildwood-09825.herokuapp.com/api/candidate_post_map`).then(response=>console.log(response.data))
+};
+
   render() {
     const {
       handleOnPosts,
@@ -107,7 +117,7 @@ class Instructions_Component extends React.Component {
                         </Button>
                         <Button
                           color="primary"
-                          onClick={e => deleteInstruction(e, post.uuid)}
+                          onClick={e => deleteInstruction(e, instruction.uuid)}
                         >
                           {" "}
                           Delete

@@ -33,11 +33,13 @@ import {
   handleOnQuestionClick,
   handleOnCandidatePostClick,
   handleOnResultClick,
-  handleOnPosts,handleOnQuestions,handleOnInstructionClick
+  handleOnPosts, handleOnQuestions, handleOnInstructionClick,
+  handleOnCandidatePost
 } from "../../redux/actions";
 import Instructions_Component from "../Instructions_Component";
 import Interview_Posts from "../Interview_Posts";
 import Question_section from "../Question_section";
+import CandidatePostMap from "../CandidatePostMap/index"
 import axios from "axios";
 const drawerWidth = 240;
 
@@ -124,11 +126,11 @@ const Menu = props => {
     open,
     handleDrawerOpen,
     handleDrawerClose,
-    handleOnPostClick = () => {},
-    handleOnCandidatePostClick = () => {},
-    handleOnQuestionClick = () => {},
-    handleOnResultClick = () => {},
-    handleOnInstructionClick=()=>{},
+    handleOnPostClick = () => { },
+    handleOnCandidatePostClick = () => { },
+    handleOnQuestionClick = () => { },
+    handleOnResultClick = () => { },
+    handleOnInstructionClick = () => { },
     onClickLogout,
     history,
     actionList,
@@ -159,19 +161,19 @@ const Menu = props => {
       });
     return handleOnPostClick(history);
   };
-  const  displayInstructions=()=>{
-      var { handleOnQuestions,history,instructions } = props;
-      let instruction_s = [];
-      axios
-        .get("https://tranquil-wildwood-09825.herokuapp.com/api/exam_rules")
-        .then(response => {
-          instruction_s = response.data.posts.map(q => q);
-          props.handleOnQuestions("instructions", instruction_s);
-        });
-        return handleOnInstructionClick(history);
-    }
-const  displayQuestions=()=>{
-    var { handleOnQuestions,history,questions } = props;
+  const displayInstructions = () => {
+    var { handleOnQuestions, history, instructions } = props;
+    let instruction_s = [];
+    axios
+      .get("https://tranquil-wildwood-09825.herokuapp.com/api/exam_rules")
+      .then(response => {
+        instruction_s = response.data.posts.map(q => q);
+        props.handleOnQuestions("instructions", instruction_s);
+      });
+    return handleOnInstructionClick(history);
+  }
+  const displayQuestions = () => {
+    var { handleOnQuestions, history, questions } = props;
     let question_s = [];
     axios
       .get("https://tranquil-wildwood-09825.herokuapp.com/api/question_section")
@@ -179,17 +181,20 @@ const  displayQuestions=()=>{
         question_s = response.data.posts.map(q => q);
         props.handleOnQuestions("questions", question_s);
       });
-      return handleOnQuestionClick(history);
+    return handleOnQuestionClick(history);
   }
-const  displayCandidatePostMaps = () => {
-      var { handleOnCandidatePost } = this.props;
-      let candidatePostMap_s = []
-      axios
-          .get("http://localhost:8080/api/candidate_post_map")
-          .then(response => {
-              let candidatePostMap_s = response.data.candidate_post_map.map(p => p);
-              this.props.handleOnCandidatePost("candidatePost", candidatePostMap_s);
-          });
+  const displayCandidatePostMaps = () => {
+    var { handleOnCandidatePost, history } = props;
+    let candidatePostMap_s = []
+    axios
+      .get("http://localhost:8080/api/candidate_post_map")
+      .then(response => {
+        console.log("data", response.data);
+
+        let candidatePostMap_s = response.data.candidate_post_map.map(p => p);
+        props.handleOnCandidatePost("candidatePost", candidatePostMap_s);
+      });
+    return handleOnCandidatePostClick(history);
   };
   return (
     <div className={classes.root}>
@@ -212,7 +217,7 @@ const  displayCandidatePostMaps = () => {
               >
                 <MenuIcon />
               </IconButton>
-              ​
+
               <Grid item md={11}>
                 <Typography
                   style={{ fontFamily: '"Apple Color Emoji"' }}
@@ -223,7 +228,7 @@ const  displayCandidatePostMaps = () => {
                   GoodWorks Colloquio
                 </Typography>
               </Grid>
-              ​
+
               <Grid item md={1}>
                 <Typography variant="h6" color="inherit" noWrap>
                   <Button
@@ -254,19 +259,19 @@ const  displayCandidatePostMaps = () => {
             {theme.direction === "ltr" ? (
               <ChevronLeftIcon />
             ) : (
-              <ChevronRightIcon />
-            )}
+                <ChevronRightIcon />
+              )}
           </IconButton>
         </div>
         <Divider />
         <List>
-          <ListItem button onClick={() => displayPosts()} style={{paddingRight: "100px"}}>
+          <ListItem button onClick={() => displayPosts()} style={{ paddingRight: "100px" }}>
             <ListItemText inset primary="Post" />
           </ListItem>
           <ListItem button onClick={() => displayInstructions()}>
             <ListItemText inset primary="Instructions" />
           </ListItem>
-          <ListItem button onClick={() => handleOnCandidatePostClick(history)}>
+          <ListItem button onClick={() => displayCandidatePostMaps(history)}>
             <ListItemText inset primary="Candidate_Post_Map" />
           </ListItem>
           <ListItem button onClick={() => displayQuestions()}>
@@ -275,7 +280,7 @@ const  displayCandidatePostMaps = () => {
           <ListItem button onClick={() => handleOnResultClick(history)}>
             <ListItemText inset primary="Result" />
           </ListItem>
-          ​
+
         </List>
       </Drawer>
       <main
@@ -288,18 +293,19 @@ const  displayCandidatePostMaps = () => {
           <Route exact path="/menu/post" component={Interview_Posts} />
           <Route exact path="/menu/question" component={Question_section} />
           <Route exact path="/menu/instruction" component={Instructions_Component} />
+          <Route exact path="/menu/Candidate_Post_Map" component={CandidatePostMap} />
         </Typography>
       </main>
     </div>
   );
 };
 
-const mapStateToProps = ({ open, actionList, history, posts,instructions }) => {
+const mapStateToProps = ({ open, actionList, history, posts, instructions }) => {
   return {
     open,
     actionList,
     history,
-    posts,instructions
+    posts, instructions
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -309,12 +315,16 @@ const mapDispatchToProps = dispatch => {
     handleOnQuestionClick: history => dispatch(handleOnQuestionClick(history)),
     handleDrawerOpen: () => dispatch(handleDrawerOpen()),
     handleDrawerClose: () => dispatch(handleDrawerClose()),
-    handleOnInstructionClick:history=>dispatch(handleOnInstructionClick(history)),
+    handleOnInstructionClick: history => dispatch(handleOnInstructionClick(history)),
+    handleOnCandidatePostClick: history => dispatch(handleOnCandidatePostClick(history)),
     handleOnPosts: (post, value) => {
       dispatch(handleOnPosts(post, value));
     },
     handleOnQuestions: (question, val) => {
       dispatch(handleOnQuestions(question, val));
+    },
+    handleOnCandidatePost: (candidatePost, postMapValue) => {
+      dispatch(handleOnCandidatePost(candidatePost, postMapValue))
     }
 
   };

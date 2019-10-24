@@ -24,41 +24,50 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
 class Create_Update_Instruction extends React.Component {
-  handleOnCreatePost = () => {
-    var { post } = this.props;
+  handleOnCreateInstruction = () => {
+    debugger
+    var { instruction } = this.props;
     const uuid = require("uuidv4").default;
+    debugger
     axios
-      .post("http://localhost:8080/api/", {
+      .post("http://localhost:8080/api/exam_rules", {
         uuid: uuid(),
-        post_name: post.post_name,
-        threshold: post.threshold,
+        rule_name: instruction.rule_name,
+        priority: instruction.priority,
         created_by: "GWLADMIN124"
       })
       .then(response => {
         console.log(response.data, "res");
+        debugger
       });
+      debugger
     this.props.handleOnToggleDialog();
   };
-  handleOnUpdatePost = () => {};
+  handleOnUpdatePost = () => { };
   handleClose = () => {
     this.props.handleOnToggleDialog();
   };
   render() {
     const {
       post = {},
-      handleFieldChange,
+      handleFieldChange = {},
       roleList = [],
       userRoles,
       toggleDialog,
       handleOnToggleDialog,
-      handleOnPosts
+      handleOnPosts,
+      instruction = {},
+      instructions = []
     } = this.props;
-    const { handleOnUpdatePost, handleOnCreatePost } = this;
+    console.log("inst", instruction);
+
+    const { priority } = handleFieldChange;
+    const { handleOnUpdatePost, handleOnCreateInstruction } = this;
     const { openDialog = false } = toggleDialog || {};
-    const fun = (toggleDialog, handleOnCreatePost, handleOnUpdatePost) => {
+    const fun = (toggleDialog, handleOnCreateInstruction, handleOnUpdatePost) => {
       if (toggleDialog.buttonName == "Create") {
 
-        return this.handleOnCreatePost();
+        return this.handleOnCreateInstruction();
         debugger
       } else if (toggleDialog.buttonName == "Update") {
         return this.handleOnUpdatePost();
@@ -89,32 +98,39 @@ class Create_Update_Instruction extends React.Component {
 
               <TextField
                 id="outlined-name"
-                label="Post_Name"
-                value={post.post_name}
+                label="Rule Name"
+                value={instruction.rule_name}
                 onChange={e =>
-                  handleFieldChange("post_name", e.target.value, "post")
+                  handleFieldChange("rule_name", e.target.value, "instruction")
                 }
                 margin="normal"
                 variant="outlined"
               />
-              <TextField
-                id="outlined-name"
-                label="Threshold"
-                type="number"
-                value={post.threshold}
-                onChange={e =>
-                  handleFieldChange("threshold", e.target.value, "post")
-                }
-                margin="normal"
-                variant="outlined"
-              />
+              <FormControl variant="outlined">
+                <InputLabel htmlFor="outlined-age-simple">priority</InputLabel>
+                <Select
+                  value={instruction.priority}
+                  onChange={e => {
+                    handleFieldChange("priority", e.target.value, "instruction");
+                  }}
+                  input={<Input id="select-multiple" />}
+                >
+                  {instruction.priority1.map((pr, index) => {
+                    return (
+                      <MenuItem key={index} value={pr}>
+                        {pr}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
               <Button
                 color="primary"
                 variant="contained"
                 onClick={() =>
                   fun(
                     toggleDialog,
-                    handleOnCreatePost,
+                    handleOnCreateInstruction,
                     handleOnPosts,
                     handleOnUpdatePost,
                     post
@@ -130,11 +146,13 @@ class Create_Update_Instruction extends React.Component {
     );
   }
 }
-const mapStateToProps = ({ posts, post, toggleDialog }) => {
+const mapStateToProps = ({ posts, post, toggleDialog, instruction, instructions }) => {
   return {
     posts,
     post,
-    toggleDialog
+    toggleDialog,
+    instruction,
+    instructions
   };
 };
 const mapDispatchToProps = dispatch => {
