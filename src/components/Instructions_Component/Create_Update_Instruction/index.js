@@ -40,13 +40,32 @@ class Create_Update_Instruction extends React.Component {
         console.log(response.data, "res");
         debugger
       });
-      debugger
+    debugger
     this.props.handleOnToggleDialog();
   };
-  handleOnUpdatePost = () => { };
+  handleOnUpdateInstruction = () => {
+    var { instruction } = this.props;
+    var { uuid, rule_name, priority } = instruction;
+    console.log("APMAN", uuid, rule_name, priority);
+    debugger
+    axios.put(`http://localhost:8080/api/exam_rules`, {
+      rule_name: rule_name,
+      priority: priority,
+      updated_by: "GWLADMIN124",
+      uuid: uuid
+    })
+      .then(response => {
+        debugger;
+        console.log(response.data, "res");
+        debugger;
+      })
+    this.props.handleOnToggleDialog();
+  };
+
   handleClose = () => {
     this.props.handleOnToggleDialog();
   };
+
   render() {
     const {
       post = {},
@@ -57,20 +76,21 @@ class Create_Update_Instruction extends React.Component {
       handleOnToggleDialog,
       handleOnPosts,
       instruction = {},
-      instructions = []
+      instructions = [],
+      priority1
     } = this.props;
     console.log("inst", instruction);
 
     const { priority } = handleFieldChange;
-    const { handleOnUpdatePost, handleOnCreateInstruction } = this;
+    const { handleOnUpdateInstruction, handleOnCreateInstruction } = this;
     const { openDialog = false } = toggleDialog || {};
-    const fun = (toggleDialog, handleOnCreateInstruction, handleOnUpdatePost) => {
+    const fun = (toggleDialog, handleOnCreateInstruction, handleOnUpdateInstruction) => {
       if (toggleDialog.buttonName == "Create") {
 
         return this.handleOnCreateInstruction();
         debugger
       } else if (toggleDialog.buttonName == "Update") {
-        return this.handleOnUpdatePost();
+        return this.handleOnUpdateInstruction();
         debugger
       }
     };
@@ -115,7 +135,7 @@ class Create_Update_Instruction extends React.Component {
                   }}
                   input={<Input id="select-multiple" />}
                 >
-                  {instruction.priority1.map((pr, index) => {
+                  {priority1.map((pr, index) => {
                     return (
                       <MenuItem key={index} value={pr}>
                         {pr}
@@ -132,7 +152,7 @@ class Create_Update_Instruction extends React.Component {
                     toggleDialog,
                     handleOnCreateInstruction,
                     handleOnPosts,
-                    handleOnUpdatePost,
+                    handleOnUpdateInstruction,
                     post
                   )
                 }
@@ -146,13 +166,14 @@ class Create_Update_Instruction extends React.Component {
     );
   }
 }
-const mapStateToProps = ({ posts, post, toggleDialog, instruction, instructions }) => {
+const mapStateToProps = ({ posts, post, toggleDialog, instruction, instructions, priority1 }) => {
   return {
     posts,
     post,
     toggleDialog,
     instruction,
-    instructions
+    instructions,
+    priority1
   };
 };
 const mapDispatchToProps = dispatch => {

@@ -1,4 +1,5 @@
 import * as actionTypes from "../actionTypes";
+import axios from "axios";
 
 const applicationIntialState = {
   posts: [],
@@ -12,12 +13,13 @@ const applicationIntialState = {
     created_by: "",
     updated_by: ""
   },
+  priority1: ["Low", "Medium", "High"],
   instructions: [],
   instruction: {
     index: 1,
+    uuid: "",
     rule_name: "",
     priority: [],
-    priority1: ["Low", "Medium", "High" ],
     created_by: "",
     updated_by: ""
   },
@@ -43,7 +45,15 @@ const applicationIntialState = {
     q_comment: "",
     optionNumber: 0
   },
-  index: 0
+  index: 0,
+  login: {
+    username: "",
+    password: ""
+  },
+  snackBar: {
+    snackbarOpen: false
+  },
+  auth_token: null,
 };
 
 const reducer = (state = applicationIntialState, action) => {
@@ -72,7 +82,7 @@ const reducer = (state = applicationIntialState, action) => {
       };
 
     case actionTypes.HANDLE_ON_TOGGLE_DIALOG:
-      var { toggleDialog, question, questions, post, posts, candidatePost_Map, candidatePost } = state;
+      var { toggleDialog, question, questions, post, posts, candidatePost_Map, candidatePost, instructions, instruction } = state;
       var { openDialog, buttonName, title } = toggleDialog;
       var { buttonName, title, index } = action.payload;
       openDialog = !openDialog;
@@ -94,6 +104,11 @@ const reducer = (state = applicationIntialState, action) => {
             ...posts[index],
             index
           };
+        } else if (title == "Update Instruction") {
+          instruction = {
+            ...instructions[index],
+            index
+          }
         } else {
           candidatePost_Map = {
             ...candidatePost[index], index
@@ -107,7 +122,9 @@ const reducer = (state = applicationIntialState, action) => {
         question,
         posts,
         post,
-        questions, candidatePost_Map, candidatePost
+        questions, candidatePost_Map, candidatePost,
+        instruction,
+        instructions
       };
       debugger;
 
@@ -171,7 +188,7 @@ const reducer = (state = applicationIntialState, action) => {
         }
       };
     case actionTypes.HANDLE_DRAWER_OPEN:
-      var { open } = state.open;
+      var { open } = state;
       return {
         ...state,
         open: true
@@ -212,6 +229,81 @@ const reducer = (state = applicationIntialState, action) => {
       return {
         ...state
       };
+
+    // case actionTypes.ON_CLICK_LOGIN:
+    //   var history = action.payload.history;
+    //   var snackBar = state;
+    //   var snackbarOpen = state.snackBar;
+    //   const { username, password } = state.login;
+    //   var message = state.message;
+    //   snackbarOpen = !snackbarOpen;
+    //   debugger;
+    //   username === "GWL" && password === "123"
+    //     ? history.push("/menu")
+    //     : username == "" && password == ""
+    //       ? (message = "Enter Credentials")
+    //       : (message = "Invalid Credentials");
+    //   debugger;
+    //   return {
+    //     ...state,
+    //     message,
+    //     open,
+    //     username,
+    //     password,
+    //     snackbarOpen
+    //   };
+
+    // case actionTypes.ON_CLICK_LOGIN:
+    //   var history = action.payload.history;
+    //   var snackBar = state;
+    //   var { snackbarOpen } = state.snackBar;
+    //   const { username, password } = state.login;
+    //   var message = state.message;
+    //   snackbarOpen = !snackbarOpen;
+    //   debugger;
+    //   axios
+    //     .post(`https://evening-dawn-93464.herokuapp.com/api/login`, {
+    //       "user_name": username,
+    //       "password": password
+    //     })
+    //     .then(response => {
+    //       debugger;
+    //       console.log("RESPONSE123", response.data);
+
+    //       if (response.data.login_message) {
+    //         debugger;
+    //         message = response.data.login_message
+    //       } else {
+    //         history.push("/menu")
+    //       }
+    //       debugger;
+    //     })
+    //   username === "GWL" && password === "123"
+    //     ? history.push("/menu")
+    //     : username == "" && password == ""
+    //       ? (message = "Enter Credentials")
+    //       : (message = "Invalid Credentials");
+    //   debugger;
+    //   return {
+    //     ...state,
+    //     message,
+    //     open,
+    //     username,
+    //     password,
+    //     snackbarOpen
+    //   };
+
+    case actionTypes.HANDLE_ON_SNACKBAR_CLOSE:
+      var { snackBar } = state;
+      var { snackbarOpen } = state.snackBar;
+      debugger;
+      snackbarOpen = !snackbarOpen;
+      debugger;
+      return {
+        ...state,
+        snackbarOpen
+      };
+
     default:
       return state;
   }

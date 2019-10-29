@@ -23,26 +23,43 @@ import Create_Update_Post from "./Create_Update_Post";
 
 class CandidatePostMap extends React.Component {
 
-  
+    // displayPosts = () => {
+    //     let { handleOnPosts } = this.props;
+    //     axios
+    //         .get("https://tranquil-wildwood-09825.herokuapp.com/api/post")
+    //         .then(response => {
+    //             let post_s = response.data.posts.map(p => p);
+    //             this.props.handleOnPosts("posts", post_s);
+    //         });
+    // };
 
-    displayPosts = () => {
-        let { handleOnPosts } = this.props;
+    deleteCandidatePostMap = (e, uuid) => {
+        axios.delete(`http://localhost:8080/api/candidate_post_map/${uuid}`).then(result => {
+            console.log(result.data);
+        });
+        // return axios.get(`https://tranquil-wildwood-09825.herokuapp.com/api/candidate_post_map`).then(response=>console.log(response.data))
+    };
+
+    componentDidMount() {
+        debugger;
+        axios
+            .post(`https://evening-dawn-93464.herokuapp.com/api/select`, {
+                role_name: "Candidate"
+            })
+            .then(response => {
+                debugger;
+                console.log("response123", response);
+
+            })
+        debugger;
         axios
             .get("https://tranquil-wildwood-09825.herokuapp.com/api/post")
             .then(response => {
                 let post_s = response.data.posts.map(p => p);
                 this.props.handleOnPosts("posts", post_s);
             });
-    };
 
-    deleteCandidatePostMap = (e, uuid) => {
-        debugger;
-        axios.delete(`http://localhost:8080/api/candidate_post_map/${uuid}`).then(result => {
-            console.log(result.data);
-            debugger;
-        });
-        // return axios.get(`https://tranquil-wildwood-09825.herokuapp.com/api/candidate_post_map`).then(response=>console.log(response.data))
-    };
+    }
 
     render() {
         console.log(this.props.candidatePost, "candidate");

@@ -65,53 +65,68 @@ export const handleOnCandidatePost = (candidatePost, postMapValue) => {
     }
   };
 }
-export const handleDrawerOpen=()=>{
-  return{
-    type:actionTypes.HANDLE_DRAWER_OPEN
+export const handleDrawerOpen = () => {
+  return {
+    type: actionTypes.HANDLE_DRAWER_OPEN
   }
 };
-export const handleDrawerClose=()=>{
-  return{
-    type:actionTypes.HANDLE_DRAWER_CLOSE
+export const handleDrawerClose = () => {
+  return {
+    type: actionTypes.HANDLE_DRAWER_CLOSE
   }
 };
-export const handleOnPostClick=(history)=>{
-  return{
-    type:actionTypes.HANDLE_ON_POST_CLICK,
-    payload:{
+export const handleOnPostClick = (history) => {
+  return {
+    type: actionTypes.HANDLE_ON_POST_CLICK,
+    payload: {
       history
     }
   }
 };
-export const handleOnQuestionClick=(history)=>{
-  return{
-    type:actionTypes.HANDLE_ON_QUESTION_CLICK,
-    payload:{
+export const handleOnQuestionClick = (history) => {
+  return {
+    type: actionTypes.HANDLE_ON_QUESTION_CLICK,
+    payload: {
       history
     }
   }
 };
-export const handleOnCandidatePostClick=(history)=>{
-  return{
-    type:actionTypes.HANDLE_ON_CANDIDATE_POST_MAP_CLICK,
-    payload:{
+export const handleOnCandidatePostClick = (history) => {
+  return {
+    type: actionTypes.HANDLE_ON_CANDIDATE_POST_MAP_CLICK,
+    payload: {
       history
     }
   }
 };
-export const handleOnResultClick=(history)=>{
-  return{
-    type:actionTypes.HANDLE_ON_RESULT_CLICK,
-    payload:{
+export const handleOnResultClick = (history) => {
+  return {
+    type: actionTypes.HANDLE_ON_RESULT_CLICK,
+    payload: {
       history
     }
   }
 };
-export const handleOnInstructionClick=(history)=>{
-  return{
-    type:actionTypes.HANDLE_ON_INSTRUCTION_CLICK,
-    payload:{
+export const handleOnInstructionClick = (history) => {
+  return {
+    type: actionTypes.HANDLE_ON_INSTRUCTION_CLICK,
+    payload: {
       history
     }
   }
+};
+
+export const onClickLogin = (history) => {
+  return {
+    type: actionTypes.ON_CLICK_LOGIN,
+    payload: {
+      history
+    }
+  };
+};
+
+export const handleOnSnackBarClose = () => {
+  return {
+    type: actionTypes.HANDLE_ON_SNACKBAR_CLOSE
+  };
 };

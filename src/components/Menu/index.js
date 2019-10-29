@@ -151,6 +151,7 @@ const Menu = props => {
     }
     return {};
   };
+
   const displayPosts = () => {
     let { handleOnPosts, history } = props;
     axios
@@ -161,6 +162,7 @@ const Menu = props => {
       });
     return handleOnPostClick(history);
   };
+
   const displayInstructions = () => {
     var { handleOnQuestions, history, instructions } = props;
     let instruction_s = [];
@@ -171,7 +173,8 @@ const Menu = props => {
         props.handleOnQuestions("instructions", instruction_s);
       });
     return handleOnInstructionClick(history);
-  }
+  };
+
   const displayQuestions = () => {
     var { handleOnQuestions, history, questions } = props;
     let question_s = [];
@@ -182,7 +185,8 @@ const Menu = props => {
         props.handleOnQuestions("questions", question_s);
       });
     return handleOnQuestionClick(history);
-  }
+  };
+
   const displayCandidatePostMaps = () => {
     var { handleOnCandidatePost, history } = props;
     let candidatePostMap_s = []
@@ -196,6 +200,7 @@ const Menu = props => {
       });
     return handleOnCandidatePostClick(history);
   };
+  
   return (
     <div className={classes.root}>
       <CssBaseline />
