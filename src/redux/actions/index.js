@@ -57,3 +57,53 @@ export const handleOnChangeOption=(o_index,val_ue)=>{
     }
   };
 }
+export const handleDrawerOpen=()=>{
+  return{
+    type:actionTypes.HANDLE_DRAWER_OPEN
+  }
+};
+export const handleDrawerClose=()=>{
+  return{
+    type:actionTypes.HANDLE_DRAWER_CLOSE
+  }
+};
+export const handleOnPostClick=(history)=>{
+  return{
+    type:actionTypes.HANDLE_ON_POST_CLICK,
+    payload:{
+      history
+    }
+  }
+};
+export const handleOnQuestionClick=(history)=>{
+  return{
+    type:actionTypes.HANDLE_ON_QUESTION_CLICK,
+    payload:{
+      history
+    }
+  }
+};
+export const handleOnCandidatePostClick=(history)=>{
+  return{
+    type:actionTypes.HANDLE_ON_CANDIDATE_POST_MAP_CLICK,
+    payload:{
+      history
+    }
+  }
+};
+export const handleOnResultClick=(history)=>{
+  return{
+    type:actionTypes.HANDLE_ON_RESULT_CLICK,
+    payload:{
+      history
+    }
+  }
+};
+export const handleOnInstructionClick=(history)=>{
+  return{
+    type:actionTypes.HANDLE_ON_INSTRUCTION_CLICK,
+    payload:{
+      history
+    }
+  }
+};
