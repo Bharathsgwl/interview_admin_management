@@ -30,7 +30,7 @@ class Create_Update_Instruction extends React.Component {
     const uuid = require("uuidv4").default;
     debugger
     axios
-      .post("http://localhost:8080/api/exam_rules", {
+      .post("https://still-basin-05792.herokuapp.com/api/exam_rules", {
         uuid: uuid(),
         rule_name: instruction.rule_name,
         priority: instruction.priority,
@@ -48,7 +48,7 @@ class Create_Update_Instruction extends React.Component {
     var { uuid, rule_name, priority } = instruction;
     console.log("APMAN", uuid, rule_name, priority);
     debugger
-    axios.put(`http://localhost:8080/api/exam_rules`, {
+    axios.put(`https://still-basin-05792.herokuapp.com/api/exam_rules`, {
       rule_name: rule_name,
       priority: priority,
       updated_by: "GWLADMIN124",

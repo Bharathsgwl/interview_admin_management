@@ -30,8 +30,13 @@ const applicationIntialState = {
   },
   candidatePost: [],
   candidatePost_Map: {
-    post_id: [], user_id: [], created_by: ''
+    uuid:"",
+    post_id: [], user_id: [], created_by: '',
+    Selected_Users: []
   },
+
+  candidates : [],
+
   question: {
     index: 1,
     post_id: [],
@@ -52,8 +57,8 @@ const applicationIntialState = {
   },
   snackBar: {
     snackbarOpen: false
-  },
-  auth_token: null,
+  }
+
 };
 
 const reducer = (state = applicationIntialState, action) => {
@@ -253,45 +258,30 @@ const reducer = (state = applicationIntialState, action) => {
     //     snackbarOpen
     //   };
 
-    // case actionTypes.ON_CLICK_LOGIN:
-    //   var history = action.payload.history;
-    //   var snackBar = state;
-    //   var { snackbarOpen } = state.snackBar;
-    //   const { username, password } = state.login;
-    //   var message = state.message;
-    //   snackbarOpen = !snackbarOpen;
-    //   debugger;
-    //   axios
-    //     .post(`https://evening-dawn-93464.herokuapp.com/api/login`, {
-    //       "user_name": username,
-    //       "password": password
-    //     })
-    //     .then(response => {
-    //       debugger;
-    //       console.log("RESPONSE123", response.data);
+    case actionTypes.HANDLE_AUTHENTICATION:
+      var { history } = action.payload;
+      var snackBar = state;
+      var snackbarOpen = state.snackBar;
+      var message = state.snackBar;
+      snackbarOpen = !snackbarOpen;
+      console.log(history, "histu")
+      debugger;
+      axios
+        .post(`https://evening-dawn-93464.herokuapp.com/api/verify`, {
+          "auth_token": sessionStorage.getItem('auth_token')
+        })
+        .then(response => {
+          if (response.data.isloggedIn === false) {
+            debugger;
+            console.log("Resp1", response);
+            history.push("/")
 
-    //       if (response.data.login_message) {
-    //         debugger;
-    //         message = response.data.login_message
-    //       } else {
-    //         history.push("/menu")
-    //       }
-    //       debugger;
-    //     })
-    //   username === "GWL" && password === "123"
-    //     ? history.push("/menu")
-    //     : username == "" && password == ""
-    //       ? (message = "Enter Credentials")
-    //       : (message = "Invalid Credentials");
-    //   debugger;
-    //   return {
-    //     ...state,
-    //     message,
-    //     open,
-    //     username,
-    //     password,
-    //     snackbarOpen
-    //   };
+          } else {
+            debugger;
+            console.log("Resp2", response);
+
+          }
+        })
 
     case actionTypes.HANDLE_ON_SNACKBAR_CLOSE:
       var { snackBar } = state;
@@ -303,6 +293,7 @@ const reducer = (state = applicationIntialState, action) => {
         ...state,
         snackbarOpen
       };
+      
 
     default:
       return state;

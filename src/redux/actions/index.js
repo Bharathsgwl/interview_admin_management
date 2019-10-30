@@ -130,3 +130,12 @@ export const handleOnSnackBarClose = () => {
     type: actionTypes.HANDLE_ON_SNACKBAR_CLOSE
   };
 };
+
+export const handleAuthenticaton = (history) => {
+  return {
+    type: actionTypes.HANDLE_AUTHENTICATION,
+    payload: {
+      history
+    }
+  };
+};

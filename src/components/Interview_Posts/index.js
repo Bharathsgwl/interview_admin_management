@@ -27,16 +27,19 @@ class Interview_Posts extends React.Component {
   //       let  post_s = response.data.posts;
   //         this.props.handleOnPosts("posts", post_s);
   //       });
-  //   }4
+  //   }
+
+
+
   deletePost = (e, uuid) => {
     debugger;
     const { questions } = this.props;
-    axios.delete(`http://localhost:8080/api/post/${uuid}`).then(result => {
+    axios.delete(`https://still-basin-05792.herokuapp.com/api/post/${uuid}`).then(result => {
       console.log(result.data);
-      
+
       debugger;
     });
-    return axios.get(`http://localhost:8080/api/post`).then(response=>console.log(response.data))
+    return axios.get(`https://still-basin-05792.herokuapp.com/api/post`).then(response => console.log(response.data))
   };
   render() {
     const {
@@ -122,7 +125,7 @@ class Interview_Posts extends React.Component {
     );
   }
 }
-const mapStateToProps = ({ posts, toggleDialog, post }) => {
+const mapStateToProps = ({ posts, toggleDialog, post  }) => {
   return {
     posts,
     toggleDialog

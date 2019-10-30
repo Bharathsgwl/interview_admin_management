@@ -23,9 +23,10 @@ class Login extends React.Component {
   // componentDidMount() {
   //   debugger;
   //   console.log("Component is mounting",this.props.auth_token);
-    
+
   //   this.handleValidation();
   // }
+
   onClickLogin = () => {
     debugger;
     var {
@@ -35,7 +36,7 @@ class Login extends React.Component {
       history, auth_token
     } = this.props;
     debugger;
-
+    const { handleSessionStorage, handleValidation } = this;
     var { username, password } = login;
     var { snackbarOpen } = snackBar;
     // snackbarOpen = !snackbarOpen;
@@ -64,7 +65,7 @@ class Login extends React.Component {
             debugger;
             console.log(response.data);
             auth_token = response.data.auth_token;
-            this.handleSessionStorage(response.data.all[0], response.data.auth_token);
+            return (handleSessionStorage(response.data.all[0], response.data.auth_token),handleValidation());
           }
           debugger;
         })
@@ -79,16 +80,19 @@ class Login extends React.Component {
     history.push("/menu");
   };
 
-  // handleValidation = (auth_token) => {
-  //   axios
-  //     .post(`https://evening-dawn-93464.herokuapp.com/api/verify`, {
-  //       "auth_token": auth_token
-  //     })
-  //     .then(response => {
-  //       console.log("auth resp", response.data);
+  handleValidation = () => {
+    debugger;
+    axios
+      .post(`https://evening-dawn-93464.herokuapp.com/api/validate`, {
+        "auth_token": sessionStorage.getItem("auth_token")
+      })
+      .then(response => {
+        debugger;
+        console.log("auth resp", response.data);
 
-  //     })
-  // };
+      })
+      debugger;
+  };
 
   render() {
     console.log(this.props);
@@ -174,6 +178,7 @@ const mapStateToProps = ({ snackBar, login, message, history, auth_token }) => {
 const mapDispatchToProps = dispatch => {
   return {
     // onClickLogin: history => dispatch(onClickLogin(history)),
+
     handleFieldChange: (property1, value1, propertyObject) => {
       debugger;
       dispatch(handleFieldChange(property1, value1, propertyObject));

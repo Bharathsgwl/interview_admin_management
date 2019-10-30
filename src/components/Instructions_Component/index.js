@@ -43,7 +43,7 @@ class Instructions_Component extends React.Component {
 
   deleteInstruction = (e, uuid) => {
     debugger;
-    axios.delete(`http://localhost:8080/api/exam_rules/${uuid}`).then(result => {
+    axios.delete(`https://still-basin-05792.herokuapp.com/api/exam_rules/${uuid}`).then(result => {
         console.log(result.data);
         debugger;
     });
@@ -157,4 +157,3 @@ export default connect(
   mapDispatchToProps
 )(withRouter(Instructions_Component));
 
-//

@@ -34,7 +34,8 @@ import {
   handleOnCandidatePostClick,
   handleOnResultClick,
   handleOnPosts, handleOnQuestions, handleOnInstructionClick,
-  handleOnCandidatePost
+  handleOnCandidatePost,
+  handleAuthenticaton
 } from "../../redux/actions";
 import Instructions_Component from "../Instructions_Component";
 import Interview_Posts from "../Interview_Posts";
@@ -131,11 +132,12 @@ const Menu = props => {
     handleOnQuestionClick = () => { },
     handleOnResultClick = () => { },
     handleOnInstructionClick = () => { },
-    onClickLogout,
+    // onClickLogout,
     history,
     actionList,
     setHandleUserManagementAction,
-    setSnackbarMessage
+    setSnackbarMessage,
+    handleAuthenticaton = () => { }
   } = props;
   debugger;
   const classes = useStyles();
@@ -152,55 +154,81 @@ const Menu = props => {
     return {};
   };
 
+  // const handleValidation = () => {
+  //   axios
+  //     .post(`https://evening-dawn-93464.herokuapp.com/api/verify`, {
+  //       "auth_token": sessionStorage.getItem("auth_token");
+  //     })
+  //     .then(response => {
+  //       console.log("auth resp", response.data);
+
+  //     })
+  // };
+
+  const onClickLogout = () => {
+    axios.put(`https://evening-dawn-93464.herokuapp.com/api/logout`, {
+      "auth_token":sessionStorage.getItem('auth_token')
+    })
+      .then(response => {
+        sessionStorage.clear()
+        if (!response.data.isloggedIn) {
+          // redirect=true
+          history.push("/")
+        }
+      })
+      .catch(error => console.log(error)
+      )
+  }
+
   const displayPosts = () => {
     let { handleOnPosts, history } = props;
     axios
-      .get("https://tranquil-wildwood-09825.herokuapp.com/api/post")
+      .get("https://still-basin-05792.herokuapp.com/api/post")
       .then(response => {
         let post_s = response.data.posts.map(p => p);
         props.handleOnPosts("posts", post_s);
       });
-    return handleOnPostClick(history);
+    return (handleAuthenticaton(history), handleOnPostClick(history));
   };
 
   const displayInstructions = () => {
     var { handleOnQuestions, history, instructions } = props;
     let instruction_s = [];
     axios
-      .get("https://tranquil-wildwood-09825.herokuapp.com/api/exam_rules")
+      .get("https://still-basin-05792.herokuapp.com/api/exam_rules")
       .then(response => {
-        instruction_s = response.data.posts.map(q => q);
+        instruction_s = response.data.exam_rules.map(q => q);
         props.handleOnQuestions("instructions", instruction_s);
       });
-    return handleOnInstructionClick(history);
+    return (handleAuthenticaton(history), handleOnInstructionClick(history));
   };
 
   const displayQuestions = () => {
     var { handleOnQuestions, history, questions } = props;
     let question_s = [];
     axios
-      .get("https://tranquil-wildwood-09825.herokuapp.com/api/question_section")
+      .get("https://still-basin-05792.herokuapp.com/api/question_section")
       .then(response => {
-        question_s = response.data.posts.map(q => q);
+        question_s = response.data.questions.map(q => q);
         props.handleOnQuestions("questions", question_s);
       });
-    return handleOnQuestionClick(history);
+    return (handleAuthenticaton(history), handleOnQuestionClick(history));
   };
 
   const displayCandidatePostMaps = () => {
     var { handleOnCandidatePost, history } = props;
     let candidatePostMap_s = []
     axios
-      .get("http://localhost:8080/api/candidate_post_map")
+      .get("https://still-basin-05792.herokuapp.com/api/candidate_post_map")
       .then(response => {
         console.log("data", response.data);
 
         let candidatePostMap_s = response.data.candidate_post_map.map(p => p);
         props.handleOnCandidatePost("candidatePost", candidatePostMap_s);
       });
-    return handleOnCandidatePostClick(history);
+    return (handleAuthenticaton(history), handleOnCandidatePostClick(history));
   };
-  
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -239,7 +267,7 @@ const Menu = props => {
                   <Button
                     style={{ color: " aliceblue" }}
                     onClick={() => {
-                      onClickLogout(history);
+                      onClickLogout();
                     }}
                   >
                     <i class="material-icons">power_settings_new</i>
@@ -298,7 +326,7 @@ const Menu = props => {
           <Route exact path="/menu/post" component={Interview_Posts} />
           <Route exact path="/menu/question" component={Question_section} />
           <Route exact path="/menu/instruction" component={Instructions_Component} />
-          <Route exact path="/menu/Candidate_Post_Map" component={CandidatePostMap} />
+          <Route exact path="/menu/candidate_post_map" component={CandidatePostMap} />
         </Typography>
       </main>
     </div>
@@ -315,6 +343,7 @@ const mapStateToProps = ({ open, actionList, history, posts, instructions }) => 
 };
 const mapDispatchToProps = dispatch => {
   return {
+    handleAuthenticaton: history => dispatch(handleAuthenticaton(history)),
     // onClickLogout: histhistoryory => dispatch(onClickLogout(history)),
     handleOnPostClick: history => dispatch(handleOnPostClick(history)),
     handleOnQuestionClick: history => dispatch(handleOnQuestionClick(history)),

@@ -26,10 +26,12 @@ import axios from "axios";
 class Create_Update_Post extends React.Component {
   handleOnCreatePost = () => {
     var { post } = this.props;
-    const uuid = require("uuid/v4").default;
+    const uuid1= require("uuidv4").default;
+    console.log(uuid1());
+    
     axios
-      .post("http://localhost:8080/api/post", {
-        uuid: uuid(),
+      .post("https://still-basin-05792.herokuapp.com/api/post", {
+        uuid: uuid1(),
         post_name: post.post_name,
         threshold: post.threshold,
         created_by: "GWLADMIN124"
@@ -45,9 +47,9 @@ class Create_Update_Post extends React.Component {
     var {uuid,post_name, threshold} = post;
     console.log("APMAN", uuid, post_name, threshold);
     debugger
-    axios.put(`http://localhost:8080/api/post`, {
+    axios.put(`https://still-basin-05792.herokuapp.com/api/post`, {
       post_name: post_name,
-      threshold:threshold,
+      threshold: threshold,
       updated_by: "GWLADMIN124",
       uuid: uuid
     })

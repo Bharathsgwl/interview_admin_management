@@ -34,31 +34,39 @@ class CandidatePostMap extends React.Component {
     // };
 
     deleteCandidatePostMap = (e, uuid) => {
-        axios.delete(`http://localhost:8080/api/candidate_post_map/${uuid}`).then(result => {
+        axios.delete(`https://still-basin-05792.herokuapp.com/api/candidate_post_map/${uuid}`).then(result => {
             console.log(result.data);
         });
-        // return axios.get(`https://tranquil-wildwood-09825.herokuapp.com/api/candidate_post_map`).then(response=>console.log(response.data))
+        // return axios.get(`https://still-basin-05792.herokuapp.com/api/candidate_post_map`).then(response=>console.log(response.data))
     };
 
     componentDidMount() {
         debugger;
+        var { candidatePost_Map, candidates } = this.props;
+        var { Selected_Users } = candidatePost_Map;
+
         axios
             .post(`https://evening-dawn-93464.herokuapp.com/api/select`, {
                 role_name: "Candidate"
             })
             .then(response => {
                 debugger;
-                console.log("response123", response);
-
+                console.log("response123", response.data.Selected_Users);
+                candidates = response.data.Selected_Users;
+                this.props.handleOnPosts("candidates", candidates);
+                console.log(candidates, "Selected_Users");
             })
         debugger;
         axios
-            .get("https://tranquil-wildwood-09825.herokuapp.com/api/post")
+            .get("https://still-basin-05792.herokuapp.com/api/post")
             .then(response => {
                 let post_s = response.data.posts.map(p => p);
                 this.props.handleOnPosts("posts", post_s);
             });
-
+        
+        // axios.get(`http://localhost:8080/api/question_section`).then(response => {
+        //     console.log(response.data, "afetr delete");
+        // })
     }
 
     render() {
@@ -68,7 +76,8 @@ class CandidatePostMap extends React.Component {
             handleOnCandidatePost,
             candidatePost,
             toggleDialog,
-            handleOnToggleDialog
+            handleOnToggleDialog,
+            Selected_Users
         } = this.props;
         return (
             <Grid container>
@@ -145,10 +154,12 @@ class CandidatePostMap extends React.Component {
     }
 }
 
-const mapStateToProps = ({ candidatePost, toggleDialog }) => {
+const mapStateToProps = ({ candidatePost, toggleDialog, candidatePost_Map, candidates }) => {
     return {
         candidatePost,
-        toggleDialog
+        toggleDialog,
+        candidates,
+        candidatePost_Map
     };
 };
 const mapDispatchToProps = dispatch => {

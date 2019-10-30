@@ -28,7 +28,7 @@ class Create_Update_Post extends React.Component {
     var { candidatePost_Map } = this.props;
     const uuid1 = require("uuid/v4");
     axios
-      .post("https://tranquil-wildwood-09825.herokuapp.com/api/candidate_post_map", {
+      .post("https://still-basin-05792.herokuapp.com/api/candidate_post_map", {
         uuid: uuid1(),
         post_id: candidatePost_Map.post_id,
         user_id: candidatePost_Map.user_id,
@@ -39,7 +39,24 @@ class Create_Update_Post extends React.Component {
       });
     this.props.handleOnToggleDialog();
   };
-  handleOnUpdateCandidatePost = () => { };
+  handleOnUpdateCandidatePost = () => {
+    var { candidatePost_Map } = this.props;
+    var { uuid, post_id, user_id } = candidatePost_Map;
+    console.log("APMAN", post_id, user_id);
+    debugger
+    axios.put(`https://still-basin-05792.herokuapp.com/api/candidate_post_map`, {
+      "uuid": uuid,
+      "user_id": user_id,
+      "post_id": post_id,
+      "updated_by": "GWLADMIN124",
+    })
+      .then(response => {
+        debugger;
+        console.log(response.data, "res");
+        debugger;
+      })
+    this.props.handleOnToggleDialog();
+  };
   handleClose = () => {
     this.props.handleOnToggleDialog();
   };
@@ -53,8 +70,12 @@ class Create_Update_Post extends React.Component {
       handleOnToggleDialog,
       handleOnCandidatePost,
       candidatePost,
-      posts
+      posts,
+      candidates
+
     } = this.props;
+
+    console.log(candidates, "User");
 
     const { handleOnUpdateCandidatePost, handleOnCreateCandidatePost } = this;
     const { openDialog = false } = toggleDialog || {};
@@ -120,10 +141,10 @@ class Create_Update_Post extends React.Component {
                   }}
                   input={<Input id="select-multiple" />}
                 >
-                  {posts.map((post, index) => {
+                  {candidates.map((user, index) => {
                     return (
-                      <MenuItem key={post.uuid} value={post.uuid}>
-                        {post.post_name}
+                      <MenuItem key={user.uuid} value={user.uuid}>
+                        {user.user_name}
                       </MenuItem>
                     );
                   })}
@@ -179,13 +200,15 @@ class Create_Update_Post extends React.Component {
     );
   }
 }
-const mapStateToProps = ({ posts, post, toggleDialog, candidatePost_Map, candidatePost }) => {
+const mapStateToProps = ({ posts, post, toggleDialog, candidatePost_Map, candidatePost, Selected_Users, candidates }) => {
   return {
     posts,
     post,
     toggleDialog,
     candidatePost_Map,
-    candidatePost
+    candidatePost,
+    Selected_Users,
+    candidates
   };
 };
 const mapDispatchToProps = dispatch => {
