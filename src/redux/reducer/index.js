@@ -34,8 +34,9 @@ const applicationIntialState = {
     post_id: [], user_id: [], created_by: '',
     Selected_Users: []
   },
-
+result_1:[],
   candidates : [],
+  response:[],
 
   question: {
     index: 1,
@@ -78,6 +79,14 @@ const reducer = (state = applicationIntialState, action) => {
         ...state,
         [question]: val
       };
+      
+    // case actionTypes.HANDLE_ON_RESULT:
+    //   var { result, val } = action.payload;
+    //   // console.log(val,"val");
+    //   return {
+    //     ...state,
+    //     [question]: val
+    //   };
     case actionTypes.HANDLE_ON_CANDIDATEPOST:
       var { candidatePost } = state;
       var { candidatePost, postMapValue } = action.payload;
@@ -224,7 +233,7 @@ const reducer = (state = applicationIntialState, action) => {
       };
     case actionTypes.HANDLE_ON_RESULT_CLICK:
       var { history } = action.payload;
-      history.push("menu/result");
+      history.push("/menu/result");
       return {
         ...state
       };
@@ -234,7 +243,12 @@ const reducer = (state = applicationIntialState, action) => {
       return {
         ...state
       };
-
+case actionTypes.HANDLE_ON_RESPONSE_CLICK:
+  var {history}=action.payload;
+  history.push("/menu/response");
+  return{
+    ...state
+  }
     // case actionTypes.ON_CLICK_LOGIN:
     //   var history = action.payload.history;
     //   var snackBar = state;

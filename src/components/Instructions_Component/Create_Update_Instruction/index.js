@@ -102,8 +102,8 @@ class Create_Update_Instruction extends React.Component {
               onClose={handleOnToggleDialog}
               aria-labelledby="simple-dialog-title"
               open={openDialog}
-              fullWidth="true"
-              maxWidth="md"
+              // fullWidth="true"
+              // maxWidth="md"
             >
               <DialogTitle id="simple-dialog-title">
                 {toggleDialog.title}

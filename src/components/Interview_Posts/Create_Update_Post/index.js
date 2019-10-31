@@ -93,8 +93,7 @@ class Create_Update_Post extends React.Component {
               onClose={handleOnToggleDialog}
               aria-labelledby="simple-dialog-title"
               open={openDialog}
-              fullWidth="true"
-              maxWidth="md"
+              
             >
               <DialogTitle id="simple-dialog-title">
                 {toggleDialog.title}

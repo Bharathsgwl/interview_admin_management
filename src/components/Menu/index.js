@@ -35,12 +35,14 @@ import {
   handleOnResultClick,
   handleOnPosts, handleOnQuestions, handleOnInstructionClick,
   handleOnCandidatePost,
-  handleAuthenticaton
+  handleAuthenticaton, handleOnResponseClick
 } from "../../redux/actions";
 import Instructions_Component from "../Instructions_Component";
 import Interview_Posts from "../Interview_Posts";
 import Question_section from "../Question_section";
-import CandidatePostMap from "../CandidatePostMap/index"
+import CandidatePostMap from "../CandidatePostMap/index";
+import Result from "../Result/Result";
+import Response from "../Result/Response";
 import axios from "axios";
 const drawerWidth = 240;
 
@@ -130,7 +132,8 @@ const Menu = props => {
     handleOnPostClick = () => { },
     handleOnCandidatePostClick = () => { },
     handleOnQuestionClick = () => { },
-    handleOnResultClick = () => { },
+    handleOnResponseClick = () => { },
+
     handleOnInstructionClick = () => { },
     // onClickLogout,
     history,
@@ -167,7 +170,7 @@ const Menu = props => {
 
   const onClickLogout = () => {
     axios.put(`https://evening-dawn-93464.herokuapp.com/api/logout`, {
-      "auth_token":sessionStorage.getItem('auth_token')
+      "auth_token": sessionStorage.getItem('auth_token')
     })
       .then(response => {
         sessionStorage.clear()
@@ -209,6 +212,7 @@ const Menu = props => {
     axios
       .get("http://localhost:8086/api/question_section")
       .then(response => {
+        console.log(response.data,"responsequesion")
         question_s = response.data.questions.map(q => q);
         props.handleOnQuestions("questions", question_s);
       });
@@ -227,6 +231,36 @@ const Menu = props => {
         props.handleOnCandidatePost("candidatePost", candidatePostMap_s);
       });
     return (handleAuthenticaton(history), handleOnCandidatePostClick(history));
+  };
+
+
+  const displayResponse = () => {
+    var { history } = props;
+    let question_s = [];
+    axios
+      .get("http://localhost:8086/api/response")
+      .then(response => {
+        question_s = response.data.result.map(q => q);
+        console.log(response.data, "res")
+        props.handleOnQuestions("questions", question_s);
+      });
+    return (handleAuthenticaton(history), props.handleOnResponseClick(history));
+  };
+
+  const displayResult = () => {
+    var { history } = props;
+    let candidate_result = [];
+    axios
+      .get("http://localhost:8086/api/result")
+      .then(response => {
+        let candidate_result = response.data.result.map(q => q);
+        console.log(response.data, "response")
+        props.handleOnQuestions("result_1", candidate_result);
+      });
+
+
+
+    return (handleAuthenticaton(history), props.handleOnResultClick(history));
   };
 
   return (
@@ -310,9 +344,12 @@ const Menu = props => {
           <ListItem button onClick={() => displayQuestions()}>
             <ListItemText inset primary="Question" />
           </ListItem>
-          {/* <ListItem button onClick={() => handleOnResultClick(history)}>
+          <ListItem button onClick={() => displayResult(history)}>
             <ListItemText inset primary="Result" />
-          </ListItem> */}
+          </ListItem>
+          <ListItem button onClick={() => displayResponse()}>
+            <ListItemText inset primary="Response" />
+          </ListItem>
         </List>
       </Drawer>
       <main
@@ -326,6 +363,9 @@ const Menu = props => {
           <Route exact path="/menu/question" component={Question_section} />
           <Route exact path="/menu/instruction" component={Instructions_Component} />
           <Route exact path="/menu/candidate_post_map" component={CandidatePostMap} />
+          <Route exact path="/menu/result" component={Result} />
+          <Route exact path="/menu/response" component={Response} />
+
         </Typography>
       </main>
     </div>
@@ -358,7 +398,9 @@ const mapDispatchToProps = dispatch => {
     },
     handleOnCandidatePost: (candidatePost, postMapValue) => {
       dispatch(handleOnCandidatePost(candidatePost, postMapValue))
-    }
+    },
+    handleOnResultClick: history => dispatch(handleOnResultClick(history)),
+    handleOnResponseClick: history => dispatch(handleOnResponseClick(history))
 
   };
 };

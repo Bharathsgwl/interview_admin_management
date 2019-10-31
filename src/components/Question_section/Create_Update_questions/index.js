@@ -167,8 +167,8 @@ class Create_Update_questions extends React.Component {
           <Grid item md={12} classes={{ root: "displaying" }}>
             <Dialog
               onClose={handleOnToggleDialog}
-              fullWidth='true'
-            maxWidth='md'
+            //   fullWidth='true'
+            // maxWidth='md'
               aria-labelledby="alert-dialog-title"
               open={openDialog}
             >

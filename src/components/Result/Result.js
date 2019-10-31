@@ -8,9 +8,14 @@ import {
     TableHead,
     TableCell,
     TableRow,
-    Button
+    Button,
+    Input,
+    InputLabel,
+    InputBase
   } from "@material-ui/core";
 import axios from "axios";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 class Result extends Component{
  state={
      result:[], userId:null
@@ -20,7 +25,7 @@ class Result extends Component{
 
         axios
           .get(
-            "http://localhost:8080/api/result",
+            "http://localhost:8086/api/result",
             
           )
           .then(response => {
@@ -38,7 +43,7 @@ class Result extends Component{
           if(userId!=null){
             axios
             .get(
-              `http://localhost:8080/api/result/${userId}`,
+              `http://localhost:8086/api/result/${userId}`,
               
             )
             .then(response => {
@@ -63,12 +68,13 @@ class Result extends Component{
 
 
       render(){
+        console.log(this.props.result_1,"result_1")
           const {handleChange, uniqueResult} = this;
           const {result =[],userId} = this.state;
           return (<div>
             <Card style={{color:"black"}}><h2 style={{ marginLeft:"40%"}}>Candidate Result</h2></Card>
 
-              <input  type='text' placeholder='Search' value={userId} onChange={(e)=>handleChange(e.target.value)}/>
+              <InputBase  type='text' placeholder="Search…" value={userId} onChange={(e)=>handleChange(e.target.value)}/>
             <button onClick={uniqueResult}><img style={{height:'3%'}} src="https://img.icons8.com/metro/20/000000/search.png"></img></button>
             <Grid container>
             <Grid item md={12} className="icon">
@@ -113,4 +119,9 @@ class Result extends Component{
       }
     
 }
-export default Result
+const mapStateToProps = ({ result_1 }) => {
+  return {
+    result_1
+  };
+};
+export default connect(mapStateToProps,null)(withRouter(Result));

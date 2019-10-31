@@ -107,6 +107,16 @@ export const handleOnResultClick = (history) => {
     }
   }
 };
+
+export const handleOnResponseClick = (history) => {
+  return {
+    type: actionTypes.HANDLE_ON_RESPONSE_CLICK,
+    payload: {
+      history
+    }
+  }
+};
+
 export const handleOnInstructionClick = (history) => {
   return {
     type: actionTypes.HANDLE_ON_INSTRUCTION_CLICK,
