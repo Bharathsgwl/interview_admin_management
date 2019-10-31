@@ -13,47 +13,47 @@ import {
 } from "@material-ui/core";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { handleOnQuestions,handleOnToggleDialog } from "../../redux/actions";
+import { handleOnQuestions, handleOnToggleDialog } from "../../redux/actions";
 import * as actionTypes from "../../redux/actions";
 import axios from "axios";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 
 class Question_section extends React.Component {
-  getQuestions=()=>{
-    axios.get(`http://localhost:8080/api/question_section`).then(response=>{
-      console.log(response.data,"afetr delete");
+  getQuestions = () => {
+    axios.get(`https://still-basin-05792.herokuapp.com/api/question_section`).then(response => {
+      console.log(response.data, "afetr delete");
     })
   }
 
-  deleteQuestion=(e,q_uuid)=> {
-        debugger
-         const { questions } = this.props;
-        axios.delete(`http://localhost:8080/api/question_section/${q_uuid}`).then(result=>{
-          console.log(result.data);
-          axios.get("https://tranquil-wildwood-09825.herokuapp.com/api/question_section")
-          .then(response => {
+  deleteQuestion = (e, q_uuid) => {
+    debugger
+    const { questions } = this.props;
+    axios.delete(`https://still-basin-05792.herokuapp.com/api/question_section/${q_uuid}`).then(result => {
+      console.log(result.data);
+      axios.get("https://still-basin-05792.herokuapp.com/api/question_section")
+        .then(response => {
           console.log(response);
-          });
-           debugger
-         });
-         this.getQuestions();
-       }
+        });
+      debugger
+    });
+    this.getQuestions();
+  }
 
   render() {
-    const { questions ,handleOnToggleDialog,toggleDialog,posts} = this.props;
+    const { questions, handleOnToggleDialog, toggleDialog, posts } = this.props;
     // const {deleteQuestion}=this;
-    console.log(questions,posts,"questions");
-var {index}=toggleDialog;
+    console.log(questions, posts, "questions");
+    var { index } = toggleDialog;
     return (
       <Grid container>
-      <Grid item md={12} className="icon">
-       <AddCircleIcon
-         button
-         style={{ fontSize: 40, color: "gray" }} dialog={toggleDialog} onClick={()=>{handleOnToggleDialog("Create Question","CREATE")}}
-       />
-     </Grid>
+        <Grid item md={12} className="icon">
+          <AddCircleIcon
+            button
+            style={{ fontSize: 40, color: "gray" }} dialog={toggleDialog} onClick={() => { handleOnToggleDialog("Create Question", "CREATE") }}
+          />
+        </Grid>
         <Grid item md={1}></Grid>
-        <Grid item md={10 }>
+        <Grid item md={10}>
           <Paper>
             <Table>
               <TableHead>
@@ -74,7 +74,7 @@ var {index}=toggleDialog;
                 {questions.map((question, index1) => {
                   return (
                     <TableRow key={index1}>
-                      <TableCell>{index1+1}</TableCell>
+                      <TableCell>{index1 + 1}</TableCell>
                       <TableCell>{question.q_uuid}</TableCell>
                       <TableCell>{question.post_id}</TableCell>
                       <TableCell>{question.q_name}</TableCell>
@@ -90,8 +90,8 @@ var {index}=toggleDialog;
                       <TableCell>{question.updated_by}</TableCell>
                       <TableCell>{question.updated_time}</TableCell>
                       <TableCell>
-                        <Button color="primary" onClick={()=>handleOnToggleDialog("Update Question", "Update", index1)}> Edit </Button>
-                        <Button color="primary" onClick={e=>this.deleteQuestion(e,question.q_uuid)}> Delete</Button>
+                        <Button color="primary" onClick={() => handleOnToggleDialog("Update Question", "Update", index1)}> Edit </Button>
+                        <Button color="primary" onClick={e => this.deleteQuestion(e, question.q_uuid)}> Delete</Button>
                       </TableCell>
                     </TableRow>
                   );
@@ -101,15 +101,15 @@ var {index}=toggleDialog;
           </Paper>
         </Grid>
 
-      <Grid item md={1}></Grid>
-     <Create_Update_questions />
-   </Grid>
+        <Grid item md={1}></Grid>
+        <Create_Update_questions />
+      </Grid>
     );
   }
 }
-const mapStateToProps = ({ questions,posts,toggleDialog }) => {
+const mapStateToProps = ({ questions, posts, toggleDialog }) => {
   return {
-    questions,toggleDialog,posts
+    questions, toggleDialog, posts
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -117,8 +117,8 @@ const mapDispatchToProps = dispatch => {
     handleOnQuestions: (question, val) => {
       dispatch(handleOnQuestions(question, val));
     },
-    handleOnToggleDialog:(title,buttonName,index)=>{
-      dispatch(handleOnToggleDialog(title,buttonName,index))
+    handleOnToggleDialog: (title, buttonName, index) => {
+      dispatch(handleOnToggleDialog(title, buttonName, index))
     }
   };
 };

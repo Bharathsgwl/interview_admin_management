@@ -16,9 +16,9 @@ import { handleOnPosts, handleOnToggleDialog } from "../../redux/actions";
 import * as actionTypes from "../../redux/actions";
 import axios from "axios";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import Create_Update_Post from "./Create_Update_Post";
+import Create_Update_Instruction from './Create_Update_Instruction';
 import SpinnerComponent from "../SpinnerComponent";
-class Interview_Posts extends React.Component {
+class Instructions_Component extends React.Component {
   // displayPosts(){
   // let {handleOnPosts}=this.props;
   //     axios
@@ -27,29 +27,40 @@ class Interview_Posts extends React.Component {
   //       let  post_s = response.data.posts;
   //         this.props.handleOnPosts("posts", post_s);
   //       });
-  //   }
+  //   }4
+  // deletePost = (e, uuid) => {
+  //   debugger;
+  //   const { questions } = this.props;
+  //   axios.delete(`http://localhost:8080/api/post/${uuid}`).then(result => {
+  //     console.log(result.data);
+  //     axios.delete("http://localhost:8080/api/post").then(response => {
+  //       console.log(response.data);
+  //     });
+  //     debugger;
+  //   });
+  //   return axios.get(`http://localhost:8080/api/post`).then(response=>console.log(response.data))
+  // };
 
-
-
-  deletePost = (e, uuid) => {
+  deleteInstruction = (e, uuid) => {
     debugger;
-    const { questions } = this.props;
-    axios.delete(`https://still-basin-05792.herokuapp.com/api/post/${uuid}`).then(result => {
-      console.log(result.data);
-
-      debugger;
+    axios.delete(`https://still-basin-05792.herokuapp.com/api/exam_rules/${uuid}`).then(result => {
+        console.log(result.data);
+        debugger;
     });
-    return axios.get(`https://still-basin-05792.herokuapp.com/api/post`).then(response => console.log(response.data))
-  };
+    // return axios.get(`https://tranquil-wildwood-09825.herokuapp.com/api/candidate_post_map`).then(response=>console.log(response.data))
+};
+
   render() {
     const {
       handleOnPosts,
-      posts,
+      instructions,
       toggleDialog,
       handleOnToggleDialog,
       post
+
     } = this.props;
-    const { deletePost } = this;
+    const {   deleteInstruction=()=>{} } = this;
+    console.log(instructions,"instructions");
 
     return (
       <Grid container>
@@ -59,7 +70,7 @@ class Interview_Posts extends React.Component {
             style={{ fontSize: 40, color: "gray" }}
             dialog={toggleDialog}
             onClick={() => {
-              handleOnToggleDialog("Create Post", "Create");
+              handleOnToggleDialog("Create Instruction", "Create");
             }}
           />
         </Grid>
@@ -71,31 +82,31 @@ class Interview_Posts extends React.Component {
                 <TableRow>
                   <TableCell>Sr. No.</TableCell>
                   <TableCell>uuid</TableCell>
-                  <TableCell>Post</TableCell>
-                  <TableCell>Threshold</TableCell>
+                  <TableCell>rule_name</TableCell>
+                  <TableCell>Priority</TableCell>
                   <TableCell>Created by</TableCell>
                   <TableCell>Created time</TableCell>
                   <TableCell>Updated by</TableCell>
                   <TableCell>Updated time</TableCell>
                   <TableCell>Edit </TableCell>
                 </TableRow>
-                {posts.map((post, index) => {
+                {instructions.map((instruction, index) => {
                   return (
                     <TableRow key={index}>
                       <TableCell>{index + 1}</TableCell>
-                      <TableCell>{post.uuid}</TableCell>
-                      <TableCell>{post.post_name}</TableCell>
-                      <TableCell>{post.threshold}</TableCell>
-                      <TableCell>{post.created_by}</TableCell>
-                      <TableCell>{post.created_time}</TableCell>
-                      <TableCell>{post.updated_by}</TableCell>
-                      <TableCell>{post.updated_time}</TableCell>
+                      <TableCell>{instruction.uuid}</TableCell>
+                      <TableCell>{instruction.rule_name}</TableCell>
+                      <TableCell>{instruction.priority}</TableCell>
+                      <TableCell>{instruction.created_by}</TableCell>
+                      <TableCell>{instruction.created_time}</TableCell>
+                      <TableCell>{instruction.updated_by}</TableCell>
+                      <TableCell>{instruction.updated_time}</TableCell>
                       <TableCell>
                         <Button
                           color="primary"
                           onClick={() => {
                             handleOnToggleDialog(
-                              "Update Post",
+                              "Update Instruction",
                               "Update",
                               index
                             );
@@ -106,7 +117,7 @@ class Interview_Posts extends React.Component {
                         </Button>
                         <Button
                           color="primary"
-                          onClick={e => deletePost(e, post.uuid)}
+                          onClick={e => deleteInstruction(e, instruction.uuid)}
                         >
                           {" "}
                           Delete
@@ -120,14 +131,14 @@ class Interview_Posts extends React.Component {
           </Paper>
         </Grid>
         <Grid item md={1}></Grid>
-        <Create_Update_Post />
+<Create_Update_Instruction />
       </Grid>
     );
   }
 }
-const mapStateToProps = ({ posts, toggleDialog, post  }) => {
+const mapStateToProps = ({ instructions, toggleDialog, post }) => {
   return {
-    posts,
+    instructions,
     toggleDialog
   };
 };
@@ -144,4 +155,5 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(Interview_Posts));
+)(withRouter(Instructions_Component));
+

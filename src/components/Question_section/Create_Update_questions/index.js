@@ -66,7 +66,7 @@ class Create_Update_questions extends React.Component {
     console.log(arr3, "finalJson");
 
     axios
-      .post("http://localhost:8080/api/question_section", {
+      .post("https://still-basin-05792.herokuapp.com/api/question_section", {
         q_uuid: uuid(),
         post_id: question.post_id,
         q_name: question.q_name,
@@ -136,7 +136,7 @@ class Create_Update_questions extends React.Component {
           questions
         );
         axios
-          .put(`http://localhost:8080/api/question_sections`, {
+          .put(`https://still-basin-05792.herokuapp.com/api/question_section`, {
             q_uuid: questions[question.index].q_uuid,
             post_id: question.post_id,
             q_name: question.q_name,
@@ -151,7 +151,7 @@ class Create_Update_questions extends React.Component {
 
             axios
               .get(
-                "https://tranquil-wildwood-09825.herokuapp.com/api/question_section"
+                "https://still-basin-05792.herokuapp.com/api/question_section"
               )
               .then(response => {
                 question_s = response.data.posts.map(q => q);

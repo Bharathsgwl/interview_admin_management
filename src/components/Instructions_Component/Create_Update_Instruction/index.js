@@ -1,5 +1,5 @@
 import React from "react";
-import "./index.css";
+
 
 import {
   Typography,
@@ -23,65 +23,74 @@ import * as actionTypes from "../../../redux/actions";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
-class Create_Update_Post extends React.Component {
-  handleOnCreatePost = () => {
-    var { post } = this.props;
-    const uuid1= require("uuidv4").default;
-    console.log(uuid1());
-    
+class Create_Update_Instruction extends React.Component {
+  handleOnCreateInstruction = () => {
+    debugger
+    var { instruction } = this.props;
+    const uuid = require("uuidv4").default;
+    debugger
     axios
-      .post("https://still-basin-05792.herokuapp.com/api/post", {
-        uuid: uuid1(),
-        post_name: post.post_name,
-        threshold: post.threshold,
+      .post("https://still-basin-05792.herokuapp.com/api/exam_rules", {
+        uuid: uuid(),
+        rule_name: instruction.rule_name,
+        priority: instruction.priority,
         created_by: "GWLADMIN124"
       })
       .then(response => {
         console.log(response.data, "res");
+        debugger
       });
+    debugger
     this.props.handleOnToggleDialog();
   };
-  handleOnUpdatePost = () => {
-    
-    var {post}=this.props;
-    var {uuid,post_name, threshold} = post;
-    console.log("APMAN", uuid, post_name, threshold);
+  handleOnUpdateInstruction = () => {
+    var { instruction } = this.props;
+    var { uuid, rule_name, priority } = instruction;
+    console.log("APMAN", uuid, rule_name, priority);
     debugger
-    axios.put(`https://still-basin-05792.herokuapp.com/api/post`, {
-      post_name: post_name,
-      threshold: threshold,
+    axios.put(`https://still-basin-05792.herokuapp.com/api/exam_rules`, {
+      rule_name: rule_name,
+      priority: priority,
       updated_by: "GWLADMIN124",
       uuid: uuid
     })
-    .then(response => {
-      debugger;
-      console.log(response.data, "res");
-      debugger;
-    })
+      .then(response => {
+        debugger;
+        console.log(response.data, "res");
+        debugger;
+      })
     this.props.handleOnToggleDialog();
   };
+
   handleClose = () => {
     this.props.handleOnToggleDialog();
   };
+
   render() {
     const {
       post = {},
-      handleFieldChange,
+      handleFieldChange = {},
       roleList = [],
       userRoles,
       toggleDialog,
       handleOnToggleDialog,
-      handleOnPosts
+      handleOnPosts,
+      instruction = {},
+      instructions = [],
+      priority1
     } = this.props;
-    const { handleOnUpdatePost, handleOnCreatePost } = this;
+    console.log("inst", instruction);
+
+    const { priority } = handleFieldChange;
+    const { handleOnUpdateInstruction, handleOnCreateInstruction } = this;
     const { openDialog = false } = toggleDialog || {};
-    const fun = (toggleDialog, handleOnCreatePost, handleOnUpdatePost) => {
+    const fun = (toggleDialog, handleOnCreateInstruction, handleOnUpdateInstruction) => {
       if (toggleDialog.buttonName == "Create") {
 
-        return this.handleOnCreatePost();
+        return this.handleOnCreateInstruction();
         debugger
       } else if (toggleDialog.buttonName == "Update") {
-        return this.handleOnUpdatePost();
+        return this.handleOnUpdateInstruction();
         debugger
       }
     };
@@ -109,34 +118,41 @@ class Create_Update_Post extends React.Component {
 
               <TextField
                 id="outlined-name"
-                label="Post_Name"
-                value={post.post_name}
+                label="Rule Name"
+                value={instruction.rule_name}
                 onChange={e =>
-                  handleFieldChange("post_name", e.target.value, "post")
+                  handleFieldChange("rule_name", e.target.value, "instruction")
                 }
                 margin="normal"
                 variant="outlined"
               />
-              <TextField
-                id="outlined-name"
-                label="Threshold"
-                type="number"
-                value={post.threshold}
-                onChange={e =>
-                  handleFieldChange("threshold", e.target.value, "post")
-                }
-                margin="normal"
-                variant="outlined"
-              />
+              <FormControl variant="outlined">
+                <InputLabel htmlFor="outlined-age-simple">priority</InputLabel>
+                <Select
+                  value={instruction.priority}
+                  onChange={e => {
+                    handleFieldChange("priority", e.target.value, "instruction");
+                  }}
+                  input={<Input id="select-multiple" />}
+                >
+                  {priority1.map((pr, index) => {
+                    return (
+                      <MenuItem key={index} value={pr}>
+                        {pr}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
               <Button
                 color="primary"
                 variant="contained"
                 onClick={() =>
                   fun(
                     toggleDialog,
-                    handleOnCreatePost,
+                    handleOnCreateInstruction,
                     handleOnPosts,
-                    handleOnUpdatePost,
+                    handleOnUpdateInstruction,
                     post
                   )
                 }
@@ -150,11 +166,14 @@ class Create_Update_Post extends React.Component {
     );
   }
 }
-const mapStateToProps = ({ posts, post, toggleDialog }) => {
+const mapStateToProps = ({ posts, post, toggleDialog, instruction, instructions, priority1 }) => {
   return {
     posts,
     post,
-    toggleDialog
+    toggleDialog,
+    instruction,
+    instructions,
+    priority1
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -173,4 +192,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(Create_Update_Post));
+)(withRouter(Create_Update_Instruction));
