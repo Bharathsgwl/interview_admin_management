@@ -30,7 +30,7 @@ class Create_Update_Post extends React.Component {
     console.log(uuid1());
     
     axios
-      .post("https://still-basin-05792.herokuapp.com/api/post", {
+      .post("http://localhost:8086/api/post", {
         uuid: uuid1(),
         post_name: post.post_name,
         threshold: post.threshold,
@@ -47,7 +47,7 @@ class Create_Update_Post extends React.Component {
     var {uuid,post_name, threshold} = post;
     console.log("APMAN", uuid, post_name, threshold);
     debugger
-    axios.put(`https://still-basin-05792.herokuapp.com/api/post`, {
+    axios.put(`http://localhost:8086/api/post`, {
       post_name: post_name,
       threshold: threshold,
       updated_by: "GWLADMIN124",

@@ -43,7 +43,7 @@ class Instructions_Component extends React.Component {
 
   deleteInstruction = (e, uuid) => {
     debugger;
-    axios.delete(`https://still-basin-05792.herokuapp.com/api/exam_rules/${uuid}`).then(result => {
+    axios.delete(`http://localhost:8086/api/exam_rules/${uuid}`).then(result => {
         console.log(result.data);
         debugger;
     });

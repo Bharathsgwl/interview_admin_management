@@ -34,7 +34,7 @@ class CandidatePostMap extends React.Component {
     // };
 
     deleteCandidatePostMap = (e, uuid) => {
-        axios.delete(`https://still-basin-05792.herokuapp.com/api/candidate_post_map/${uuid}`).then(result => {
+        axios.delete(`http://localhost:8086/api/candidate_post_map/${uuid}`).then(result => {
             console.log(result.data);
         });
         // return axios.get(`https://still-basin-05792.herokuapp.com/api/candidate_post_map`).then(response=>console.log(response.data))
@@ -58,7 +58,7 @@ class CandidatePostMap extends React.Component {
             })
         debugger;
         axios
-            .get("https://still-basin-05792.herokuapp.com/api/post")
+            .get("http://localhost:8086/api/post")
             .then(response => {
                 let post_s = response.data.posts.map(p => p);
                 this.props.handleOnPosts("posts", post_s);

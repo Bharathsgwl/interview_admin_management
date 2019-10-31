@@ -34,12 +34,12 @@ class Interview_Posts extends React.Component {
   deletePost = (e, uuid) => {
     debugger;
     const { questions } = this.props;
-    axios.delete(`https://still-basin-05792.herokuapp.com/api/post/${uuid}`).then(result => {
+    axios.delete(`http://localhost:8086/api/post/${uuid}`).then(result => {
       console.log(result.data);
 
       debugger;
     });
-    return axios.get(`https://still-basin-05792.herokuapp.com/api/post`).then(response => console.log(response.data))
+    return axios.get(`http://localhost:8086/api/post`).then(response => console.log(response.data))
   };
   render() {
     const {

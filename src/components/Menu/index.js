@@ -183,7 +183,7 @@ const Menu = props => {
   const displayPosts = () => {
     let { handleOnPosts, history } = props;
     axios
-      .get("https://still-basin-05792.herokuapp.com/api/post")
+      .get("http://localhost:8086/api/post")
       .then(response => {
         let post_s = response.data.posts.map(p => p);
         props.handleOnPosts("posts", post_s);
@@ -195,7 +195,7 @@ const Menu = props => {
     var { handleOnQuestions, history, instructions } = props;
     let instruction_s = [];
     axios
-      .get("https://still-basin-05792.herokuapp.com/api/exam_rules")
+      .get("http://localhost:8086/api/exam_rules")
       .then(response => {
         instruction_s = response.data.exam_rules.map(q => q);
         props.handleOnQuestions("instructions", instruction_s);
@@ -207,7 +207,7 @@ const Menu = props => {
     var { handleOnQuestions, history, questions } = props;
     let question_s = [];
     axios
-      .get("https://still-basin-05792.herokuapp.com/api/question_section")
+      .get("http://localhost:8086/api/question_section")
       .then(response => {
         question_s = response.data.questions.map(q => q);
         props.handleOnQuestions("questions", question_s);
@@ -219,7 +219,7 @@ const Menu = props => {
     var { handleOnCandidatePost, history } = props;
     let candidatePostMap_s = []
     axios
-      .get("https://still-basin-05792.herokuapp.com/api/candidate_post_map")
+      .get("http://localhost:8086/api/candidate_post_map")
       .then(response => {
         console.log("data", response.data);
 
@@ -305,15 +305,14 @@ const Menu = props => {
             <ListItemText inset primary="Instructions" />
           </ListItem>
           <ListItem button onClick={() => displayCandidatePostMaps(history)}>
-            <ListItemText inset primary="Candidate_Post_Map" />
+            <ListItemText inset primary="Candidate Post Map" />
           </ListItem>
           <ListItem button onClick={() => displayQuestions()}>
-            <ListItemText inset primary="question" />
+            <ListItemText inset primary="Question" />
           </ListItem>
-          <ListItem button onClick={() => handleOnResultClick(history)}>
+          {/* <ListItem button onClick={() => handleOnResultClick(history)}>
             <ListItemText inset primary="Result" />
-          </ListItem>
-
+          </ListItem> */}
         </List>
       </Drawer>
       <main

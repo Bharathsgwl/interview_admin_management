@@ -20,7 +20,7 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 
 class Question_section extends React.Component {
   getQuestions = () => {
-    axios.get(`https://still-basin-05792.herokuapp.com/api/question_section`).then(response => {
+    axios.get(`http://localhost:8086/api/question_section`).then(response => {
       console.log(response.data, "afetr delete");
     })
   }
@@ -28,9 +28,9 @@ class Question_section extends React.Component {
   deleteQuestion = (e, q_uuid) => {
     debugger
     const { questions } = this.props;
-    axios.delete(`https://still-basin-05792.herokuapp.com/api/question_section/${q_uuid}`).then(result => {
+    axios.delete(`http://localhost:8086/api/question_section/${q_uuid}`).then(result => {
       console.log(result.data);
-      axios.get("https://still-basin-05792.herokuapp.com/api/question_section")
+      axios.get("http://localhost:8086/api/question_section")
         .then(response => {
           console.log(response);
         });
