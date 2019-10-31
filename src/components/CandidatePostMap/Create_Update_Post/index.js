@@ -28,7 +28,7 @@ class Create_Update_Post extends React.Component {
     var { candidatePost_Map } = this.props;
     const uuid1 = require("uuid/v4");
     axios
-      .post("https://still-basin-05792.herokuapp.com/api/candidate_post_map", {
+      .post("http://localhost:8086/api/candidate_post_map", {
         uuid: uuid1(),
         post_id: candidatePost_Map.post_id,
         user_id: candidatePost_Map.user_id,
@@ -44,7 +44,7 @@ class Create_Update_Post extends React.Component {
     var { uuid, post_id, user_id } = candidatePost_Map;
     console.log("APMAN", post_id, user_id);
     debugger
-    axios.put(`https://still-basin-05792.herokuapp.com/api/candidate_post_map`, {
+    axios.put(`http://localhost:8086/api/candidate_post_map`, {
       "uuid": uuid,
       "user_id": user_id,
       "post_id": post_id,
