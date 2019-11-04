@@ -1,4 +1,5 @@
 import * as actionTypes from "../actionTypes";
+import axios from "axios";
 
 const applicationIntialState = {
   posts: [],
@@ -12,12 +13,37 @@ const applicationIntialState = {
     created_by: "",
     updated_by: ""
   },
-  instructions:[],
+  snackBar: {
+    snackbarOpen: false
+  },
+  message: "",
+  priority1: ["Low", "Medium", "High"],
+  instructions: [],
+  instruction: {
+    index: 1,
+    uuid: "",
+    rule_name: "",
+    priority: [],
+    created_by: "",
+    updated_by: ""
+  },
   toggleDialog: {
     openDialog: false,
     buttonName: "",
     title: ""
   },
+  candidatePost: [],
+  candidatePost_Map: {
+    uuid: "",
+    post_id: [],
+    user_id: [],
+    created_by: "",
+    Selected_Users: []
+  },
+  result_1: [],
+  candidates: [],
+  response: [],
+
   question: {
     index: 1,
     post_id: [],
@@ -31,7 +57,11 @@ const applicationIntialState = {
     q_comment: "",
     optionNumber: 0
   },
-  index: 0
+  index: 0,
+  login: {
+    username: "",
+    password: ""
+  },user:[]
 };
 
 const reducer = (state = applicationIntialState, action) => {
@@ -52,8 +82,33 @@ const reducer = (state = applicationIntialState, action) => {
         [question]: val
       };
 
+    // case actionTypes.HANDLE_ON_RESULT:
+    //   var { result, val } = action.payload;
+    //   // console.log(val,"val");
+    //   return {
+    //     ...state,
+    //     [question]: val
+    //   };
+    case actionTypes.HANDLE_ON_CANDIDATEPOST:
+      var { candidatePost } = state;
+      var { candidatePost, postMapValue } = action.payload;
+      return {
+        ...state,
+        [candidatePost]: postMapValue
+      };
+
     case actionTypes.HANDLE_ON_TOGGLE_DIALOG:
-      var { toggleDialog, question, questions, post, posts } = state;
+      var {
+        toggleDialog,
+        question,
+        questions,
+        post,
+        posts,
+        candidatePost_Map,
+        candidatePost,
+        instructions,
+        instruction
+      } = state;
       var { openDialog, buttonName, title } = toggleDialog;
       var { buttonName, title, index } = action.payload;
       openDialog = !openDialog;
@@ -75,6 +130,16 @@ const reducer = (state = applicationIntialState, action) => {
             ...posts[index],
             index
           };
+        } else if (title == "Update Instruction") {
+          instruction = {
+            ...instructions[index],
+            index
+          };
+        } else {
+          candidatePost_Map = {
+            ...candidatePost[index],
+            index
+          };
         }
       }
       debugger;
@@ -84,7 +149,11 @@ const reducer = (state = applicationIntialState, action) => {
         question,
         posts,
         post,
-        questions
+        questions,
+        candidatePost_Map,
+        candidatePost,
+        instruction,
+        instructions
       };
       debugger;
 
@@ -148,7 +217,7 @@ const reducer = (state = applicationIntialState, action) => {
         }
       };
     case actionTypes.HANDLE_DRAWER_OPEN:
-      var { open } = state.open;
+      var { open } = state;
       return {
         ...state,
         open: true
@@ -167,7 +236,7 @@ const reducer = (state = applicationIntialState, action) => {
       };
     case actionTypes.HANDLE_ON_CANDIDATE_POST_MAP_CLICK:
       var { history } = action.payload;
-      history.push("menu/Candidate_Post_Map");
+      history.push("/menu/Candidate_Post_Map");
       return {
         ...state
       };
@@ -179,16 +248,86 @@ const reducer = (state = applicationIntialState, action) => {
       };
     case actionTypes.HANDLE_ON_RESULT_CLICK:
       var { history } = action.payload;
-      history.push("menu/result");
+      history.push("/menu/result");
       return {
         ...state
       };
-      case actionTypes.HANDLE_ON_INSTRUCTION_CLICK:
-        var { history } = action.payload;
-        history.push("/menu/instruction");
-        return {
-          ...state
-        };
+    case actionTypes.HANDLE_ON_INSTRUCTION_CLICK:
+      var { history } = action.payload;
+      history.push("/menu/instruction");
+      return {
+        ...state
+      };
+    case actionTypes.HANDLE_ON_RESPONSE_CLICK:
+      var { history } = action.payload;
+      history.push("/menu/response");
+      return {
+        ...state
+      };
+    // case actionTypes.ON_CLICK_LOGIN:
+    //   var history = action.payload.history;
+    //   var snackBar = state;
+    //   var snackbarOpen = state.snackBar;
+    //   const { username, password } = state.login;
+    //   var message = state.message;
+    //   snackbarOpen = !snackbarOpen;
+    //   debugger;
+    //   username === "GWL" && password === "123"
+    //     ? history.push("/menu")
+    //     : username == "" && password == ""
+    //       ? (message = "Enter Credentials")
+    //       : (message = "Invalid Credentials");
+    //   debugger;
+    //   return {
+    //     ...state,
+    //     message,
+    //     open,
+    //     username,
+    //     password,
+    //     snackbarOpen
+    //   };
+
+    case actionTypes.HANDLE_AUTHENTICATION:
+      var { history } = action.payload;
+      var snackBar = state;
+      var snackbarOpen = state.snackBar;
+      var message = state.snackBar;
+      snackbarOpen = !snackbarOpen;
+      console.log(history, "histu");
+      debugger;
+      axios
+        .post(`https://evening-dawn-93464.herokuapp.com/api/verify`, {
+          auth_token: sessionStorage.getItem("auth_token")
+        })
+        .then(response => {
+          if (response.data.isloggedIn === false) {
+            debugger;
+            console.log("Resp1", response);
+            history.push("/");
+          } else {
+            debugger;
+            console.log("Resp2", response);
+          }
+        });
+
+    case actionTypes.HANDLE_ON_SNACKBAR_CLOSE:
+      var { snackBar } = state;
+      var { snackbarOpen } = state;
+      debugger;
+      snackbarOpen = !snackbarOpen;
+      debugger;
+      return {
+        ...state,
+        snackbarOpen
+      };
+    case actionTypes.SET_STATES_FROM_RESPONSE:
+      var { attribute, values } = action.payload;
+      console.log(attribute, values, "user");
+      return {
+        ...state,
+        [attribute]: values
+      };
+
     default:
       return state;
   }

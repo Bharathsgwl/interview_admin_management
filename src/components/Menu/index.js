@@ -33,11 +33,16 @@ import {
   handleOnQuestionClick,
   handleOnCandidatePostClick,
   handleOnResultClick,
-  handleOnPosts,handleOnQuestions,handleOnInstructionClick
+  handleOnPosts, handleOnQuestions, handleOnInstructionClick,
+  handleOnCandidatePost,
+  handleAuthenticaton, handleOnResponseClick
 } from "../../redux/actions";
 import Instructions_Component from "../Instructions_Component";
 import Interview_Posts from "../Interview_Posts";
 import Question_section from "../Question_section";
+import CandidatePostMap from "../CandidatePostMap/index";
+import Result from "../Result/Result";
+import Response from "../Result/Response";
 import axios from "axios";
 const drawerWidth = 240;
 
@@ -124,16 +129,18 @@ const Menu = props => {
     open,
     handleDrawerOpen,
     handleDrawerClose,
-    handleOnPostClick = () => {},
-    handleOnCandidatePostClick = () => {},
-    handleOnQuestionClick = () => {},
-    handleOnResultClick = () => {},
-    handleOnInstructionClick=()=>{},
-    onClickLogout,
+    handleOnPostClick = () => { },
+    handleOnCandidatePostClick = () => { },
+    handleOnQuestionClick = () => { },
+    handleOnResponseClick = () => { },
+
+    handleOnInstructionClick = () => { },
+    // onClickLogout,
     history,
     actionList,
     setHandleUserManagementAction,
-    setSnackbarMessage
+    setSnackbarMessage,
+    handleAuthenticaton = () => { }
   } = props;
   debugger;
   const classes = useStyles();
@@ -142,55 +149,118 @@ const Menu = props => {
   const getComponent = componentName => {
     if (componentName) {
       import(`./${componentName}`).then(module => {
-        console.log(module, "module");
 
         return { Component: module.default };
       });
     }
     return {};
   };
+
+  // const handleValidation = () => {
+  //   axios
+  //     .post(`https://evening-dawn-93464.herokuapp.com/api/verify`, {
+  //       "auth_token": sessionStorage.getItem("auth_token");
+  //     })
+  //     .then(response => {
+  //       console.log("auth resp", response.data);
+
+  //     })
+  // };
+
+  const onClickLogout = () => {
+    axios.put(`https://evening-dawn-93464.herokuapp.com/api/logout`, {
+      "auth_token": sessionStorage.getItem('auth_token')
+    })
+      .then(response => {
+        sessionStorage.clear()
+        if (!response.data.isloggedIn) {
+          // redirect=true
+          history.push("/")
+        }
+      })
+      .catch(error => console.log(error)
+      )
+  }
+
   const displayPosts = () => {
     let { handleOnPosts, history } = props;
     axios
-      .get("https://tranquil-wildwood-09825.herokuapp.com/api/post")
+      .get("https://pure-wave-01085.herokuapp.com/api/post")
       .then(response => {
         let post_s = response.data.posts.map(p => p);
         props.handleOnPosts("posts", post_s);
       });
-    return handleOnPostClick(history);
+    return (handleAuthenticaton(history), handleOnPostClick(history));
   };
-  const  displayInstructions=()=>{
-      var { handleOnQuestions,history,instructions } = props;
-      let instruction_s = [];
-      axios
-        .get("https://tranquil-wildwood-09825.herokuapp.com/api/exam_rules")
-        .then(response => {
-          instruction_s = response.data.posts.map(q => q);
-          props.handleOnQuestions("instructions", instruction_s);
-        });
-        return handleOnInstructionClick(history);
-    }
-const  displayQuestions=()=>{
-    var { handleOnQuestions,history,questions } = props;
+
+  const displayInstructions = () => {
+    var { handleOnQuestions, history, instructions } = props;
+    let instruction_s = [];
+    axios
+      .get("https://pure-wave-01085.herokuapp.com/api/exam_rules")
+      .then(response => {
+        instruction_s = response.data.exam_rules.map(q => q);
+        props.handleOnQuestions("instructions", instruction_s);
+      });
+    return (handleAuthenticaton(history), handleOnInstructionClick(history));
+  };
+
+  const displayQuestions = () => {
+    var { handleOnQuestions, history, questions } = props;
     let question_s = [];
     axios
-      .get("https://tranquil-wildwood-09825.herokuapp.com/api/question_section")
+      .get("https://pure-wave-01085.herokuapp.com/api/question_section")
       .then(response => {
-        question_s = response.data.posts.map(q => q);
+        console.log(response.data,"responsequesion")
+        question_s = response.data.questions.map(q => q);
         props.handleOnQuestions("questions", question_s);
       });
-      return handleOnQuestionClick(history);
-  }
-const  displayCandidatePostMaps = () => {
-      var { handleOnCandidatePost } = this.props;
-      let candidatePostMap_s = []
-      axios
-          .get("http://localhost:8080/api/candidate_post_map")
-          .then(response => {
-              let candidatePostMap_s = response.data.candidate_post_map.map(p => p);
-              this.props.handleOnCandidatePost("candidatePost", candidatePostMap_s);
-          });
+    return (handleAuthenticaton(history), handleOnQuestionClick(history));
   };
+
+  const displayCandidatePostMaps = () => {
+    var { handleOnCandidatePost, history } = props;
+    let candidatePostMap_s = []
+    axios
+      .get("https://pure-wave-01085.herokuapp.com/api/candidate_post_map")
+      .then(response => {
+        console.log("data", response.data);
+
+        let candidatePostMap_s = response.data.candidate_post_map.map(p => p);
+        props.handleOnCandidatePost("candidatePost", candidatePostMap_s);
+      });
+    return (handleAuthenticaton(history), handleOnCandidatePostClick(history));
+  };
+
+
+  const displayResponse = () => {
+    var { history ,response} = props;
+
+    axios
+      .get("https://pure-wave-01085.herokuapp.com/api/response")
+      .then(response => {
+      let  question_s = response.data.result.map(q => q);
+        console.log(response.data, "res")
+        props.handleOnQuestions("response", question_s);
+      });
+    return (handleAuthenticaton(history), props.handleOnResponseClick(history));
+  };
+
+  const displayResult = () => {
+    var { history } = props;
+    let candidate_result = [];
+    axios
+      .get("https://pure-wave-01085.herokuapp.com/api/result")
+      .then(response => {
+        let candidate_result = response.data.result.map(q => q);
+        props.handleOnQuestions("result_1", candidate_result);
+      });
+
+
+
+    return (handleAuthenticaton(history), props.handleOnResultClick(history));
+  };
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -212,7 +282,7 @@ const  displayCandidatePostMaps = () => {
               >
                 <MenuIcon />
               </IconButton>
-              ​
+
               <Grid item md={11}>
                 <Typography
                   style={{ fontFamily: '"Apple Color Emoji"' }}
@@ -223,13 +293,13 @@ const  displayCandidatePostMaps = () => {
                   GoodWorks Colloquio
                 </Typography>
               </Grid>
-              ​
+
               <Grid item md={1}>
                 <Typography variant="h6" color="inherit" noWrap>
                   <Button
                     style={{ color: " aliceblue" }}
                     onClick={() => {
-                      onClickLogout(history);
+                      onClickLogout();
                     }}
                   >
                     <i class="material-icons">power_settings_new</i>
@@ -254,28 +324,30 @@ const  displayCandidatePostMaps = () => {
             {theme.direction === "ltr" ? (
               <ChevronLeftIcon />
             ) : (
-              <ChevronRightIcon />
-            )}
+                <ChevronRightIcon />
+              )}
           </IconButton>
         </div>
         <Divider />
         <List>
-          <ListItem button onClick={() => displayPosts()} style={{paddingRight: "100px"}}>
+          <ListItem button onClick={() => displayPosts()} style={{ paddingRight: "100px" }}>
             <ListItemText inset primary="Post" />
           </ListItem>
           <ListItem button onClick={() => displayInstructions()}>
             <ListItemText inset primary="Instructions" />
           </ListItem>
-          <ListItem button onClick={() => handleOnCandidatePostClick(history)}>
-            <ListItemText inset primary="Candidate_Post_Map" />
+          <ListItem button onClick={() => displayCandidatePostMaps(history)}>
+            <ListItemText inset primary="Candidate Post Map" />
           </ListItem>
           <ListItem button onClick={() => displayQuestions()}>
-            <ListItemText inset primary="question" />
+            <ListItemText inset primary="Question" />
           </ListItem>
-          <ListItem button onClick={() => handleOnResultClick(history)}>
+          <ListItem button onClick={() => displayResult(history)}>
             <ListItemText inset primary="Result" />
           </ListItem>
-          ​
+          <ListItem button onClick={() => displayResponse()}>
+            <ListItemText inset primary="Response" />
+          </ListItem>
         </List>
       </Drawer>
       <main
@@ -288,34 +360,45 @@ const  displayCandidatePostMaps = () => {
           <Route exact path="/menu/post" component={Interview_Posts} />
           <Route exact path="/menu/question" component={Question_section} />
           <Route exact path="/menu/instruction" component={Instructions_Component} />
+          <Route exact path="/menu/candidate_post_map" component={CandidatePostMap} />
+          <Route exact path="/menu/result" component={Result} />
+          <Route exact path="/menu/response" component={Response} />
+
         </Typography>
       </main>
     </div>
   );
 };
 
-const mapStateToProps = ({ open, actionList, history, posts,instructions }) => {
+const mapStateToProps = ({ open, actionList, history, posts, instructions ,response}) => {
   return {
     open,
     actionList,
     history,
-    posts,instructions
+    posts, instructions,response
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
+    handleAuthenticaton: history => dispatch(handleAuthenticaton(history)),
     // onClickLogout: histhistoryory => dispatch(onClickLogout(history)),
     handleOnPostClick: history => dispatch(handleOnPostClick(history)),
     handleOnQuestionClick: history => dispatch(handleOnQuestionClick(history)),
     handleDrawerOpen: () => dispatch(handleDrawerOpen()),
     handleDrawerClose: () => dispatch(handleDrawerClose()),
-    handleOnInstructionClick:history=>dispatch(handleOnInstructionClick(history)),
+    handleOnInstructionClick: history => dispatch(handleOnInstructionClick(history)),
+    handleOnCandidatePostClick: history => dispatch(handleOnCandidatePostClick(history)),
     handleOnPosts: (post, value) => {
       dispatch(handleOnPosts(post, value));
     },
     handleOnQuestions: (question, val) => {
       dispatch(handleOnQuestions(question, val));
-    }
+    },
+    handleOnCandidatePost: (candidatePost, postMapValue) => {
+      dispatch(handleOnCandidatePost(candidatePost, postMapValue))
+    },
+    handleOnResultClick: history => dispatch(handleOnResultClick(history)),
+    handleOnResponseClick: history => dispatch(handleOnResponseClick(history))
 
   };
 };

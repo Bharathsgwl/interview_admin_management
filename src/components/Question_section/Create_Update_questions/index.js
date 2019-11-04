@@ -12,8 +12,13 @@ import {
   InputLabel,
   Select,
   Input,
-  MenuItem
+  MenuItem,
+  IconButton,
+  DialogContent,
+  DialogActions,
+  OutlinedInput
 } from "@material-ui/core";
+import CloseIcon from "@material-ui/icons/Close";
 import {
   handleOnToggleDialog,
   handleFieldChangeNumber,
@@ -32,26 +37,6 @@ class Create_Update_questions extends React.Component {
     element: 0,
     textArea: []
   };
-  // handleChange = (e, index) => {
-  //   var { textAre, textArea, element } = this.state;
-  //   var { question } = this.props;
-  //   textArea[index] = e;
-  //   question.options = textArea;
-  //   this.setState({
-  //     textArea,
-  //     options
-  //   });
-  //   console.log(textArea);
-  //   console.log(options, "reducer_options");
-  // };
-  // handleFieldChangeNumber = e => {
-  //   var { element } = this.state;
-  //
-  //   this.setState({
-  //     element: e
-  //   });
-  //   // console.log(textAre)
-  // };
 
   handleOnCreate = () => {
     const { toggleDialog, questions } = this.props;
@@ -63,10 +48,9 @@ class Create_Update_questions extends React.Component {
     var arr2 = JSON.stringify(arr1);
     var arr3 = arr2.replace(/"/, "{").replace(/"/, "}");
     const uuid = require("uuidv4").default;
-    console.log(arr3, "finalJson");
 
     axios
-      .post("http://localhost:8080/api/question_section", {
+      .post("https://pure-wave-01085.herokuapp.com/api/question_section", {
         q_uuid: uuid(),
         post_id: question.post_id,
         q_name: question.q_name,
@@ -83,9 +67,9 @@ class Create_Update_questions extends React.Component {
     this.props.handleOnToggleDialog();
     debugger;
   };
-  handleClose=()=>{
+  handleClose = () => {
     this.props.handleOnToggleDialog();
-  }
+  };
 
   render() {
     const {
@@ -100,7 +84,7 @@ class Create_Update_questions extends React.Component {
       handleOnChangeOption
     } = this.props;
     var { option, options_array, o_index, textArea } = this.state;
-     const { openDialog = false } = toggleDialog || {};
+    const { openDialog = false } = toggleDialog || {};
 
     const { handleOnCreate, handleOnUpdate = () => {} } = this;
     debugger;
@@ -126,17 +110,8 @@ class Create_Update_questions extends React.Component {
         var arr2 = JSON.stringify(arr1);
 
         var arr3 = arr2.replace(/"/, "{").replace(/"/, "}");
-
-        console.log(arr3, "final");
-
-        debugger;
-        console.log(
-          questions[question.index].q_uuid,
-          question.index,
-          questions
-        );
         axios
-          .put(`http://localhost:8080/api/question_sections`, {
+          .put(`https://pure-wave-01085.herokuapp.com/api/question_section`, {
             q_uuid: questions[question.index].q_uuid,
             post_id: question.post_id,
             q_name: question.q_name,
@@ -150,11 +125,9 @@ class Create_Update_questions extends React.Component {
             console.log(response.data.questions);
 
             axios
-              .get(
-                "https://tranquil-wildwood-09825.herokuapp.com/api/question_section"
-              )
+              .get("https://pure-wave-01085.herokuapp.com/api/question_section")
               .then(response => {
-                question_s = response.data.posts.map(q => q);
+                question_s = response.data.questions.map(q => q);
               });
           });
         this.props.handleOnToggleDialog();
@@ -167,108 +140,157 @@ class Create_Update_questions extends React.Component {
           <Grid item md={12} classes={{ root: "displaying" }}>
             <Dialog
               onClose={handleOnToggleDialog}
-              fullWidth='true'
-            maxWidth='md'
               aria-labelledby="alert-dialog-title"
               open={openDialog}
             >
-              <DialogTitle style={{ width: "-webkit-fill-available" }}>
-                {toggleDialog.title} <li class="material-icons" style={{float: "right"}} onClick={()=>this.handleClose()}>clear</li>
-              </DialogTitle>
-
-              <FormControl variant="outlined">
-                <InputLabel htmlFor="outlined-age-simple">Posts</InputLabel>
-                <Select
-                  value={question.post_id}
-                  onChange={e => {
-                    handleFieldChange("post_id", e.target.value, "question");
-                  }}
-                  input={<Input id="select-multiple" />}
+              <DialogContent style={{ width: 350 }}>
+                <DialogTitle
+                  style={{ width: "-webkit-fill-available" }}
+                  id="simple-dialog-title"
+                  onClose={this.handleClose}
                 >
-                  {posts.map((post, index) => {
-                    return (
-                      <MenuItem key={post.uuid} value={post.uuid}>
-                        {post.post_name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-
-              <TextField
-                id="outlined-name"
-                label="Question_Name"
-                value={question.q_name}
-                onChange={e =>
-                  handleFieldChange("q_name", e.target.value, "question")
-                }
-                margin="normal"
-                variant="outlined"
-              />
-              <TextField
-                type="number"
-                label="Number of options"
-                value={question.options.length}
-                onChange={e => {
-                  handleFieldChangeNumber(e.target.value);
-                }}
-              />
-              {question.options.map((val, ind) => {
-                return (
-                  <div key={ind}>
-                    {
-                      <TextField
-                        id="outlined-name"
-                        label="options"
-                        value={question.options[ind]}
-                        onChange={e => {
-                          handleOnChangeOption(ind, e.target.value);
-                        }}
-                        margin="normal"
-                        variant="outlined"
-                      />
+                  {toggleDialog.title}{" "}
+                  <li
+                    type="button"
+                    class="material-icons"
+                    style={{ float: "right" }}
+                    onClick={() => this.handleClose()}
+                  >
+                    clear
+                  </li>
+                </DialogTitle>
+                <Typography>
+                  <FormControl variant="outlined">
+                    <InputLabel
+                      ref={ref => {
+                        this.InputLabelRef = ref;
+                      }}
+                      htmlFor="outlined-posts-simple"
+                    >
+                      posts
+                    </InputLabel>
+                    <Select
+                      classes={{ root: "selectWidth" }}
+                      value={question.post_id}
+                      onChange={e => {
+                        handleFieldChange(
+                          "post_id",
+                          e.target.value,
+                          "question"
+                        );
+                      }}
+                      input={
+                        <OutlinedInput
+                          labelWidth={0}
+                          name="post_id"
+                          id="outlined-post_id-simple"
+                        />
+                      }
+                    >
+                      {posts.map((post, index) => {
+                        return (
+                          <MenuItem key={post.uuid} value={post.uuid}>
+                            {post.post_name}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </Typography>
+                <Typography>
+                  <TextField
+                    id="outlined-multiline-flexible"
+                    multiline
+                    rowsMax="5"
+                    label="Question_Name"
+                    value={question.q_name}
+                    onChange={e =>
+                      handleFieldChange("q_name", e.target.value, "question")
                     }
-                  </div>
-                );
-              })}
-
-              <TextField
-                id="outlined-name"
-                label="Answer"
-                value={question.q_answer}
-                onChange={e =>
-                  handleFieldChange("q_answer", e.target.value, "question")
-                }
-                margin="normal"
-                variant="outlined"
-              />
-              <TextField
-                id="outlined-name"
-                label="Timer"
-                type="number"
-                value={question.timer}
-                onChange={e =>
-                  handleFieldChange("timer", e.target.value, "question")
-                }
-                margin="normal"
-                variant="outlined"
-              />
-
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={() =>
-                  fun(
-                    toggleDialog,
-                    handleOnCreate,
-                    handleOnQuestions,
-                    handleOnUpdate,
-                    question
-                  )
-                }
-              >
-                {toggleDialog.buttonName}
-              </Button>
+                    classes={{ root: "textwidth" }}
+                    margin="normal"
+                    variant="outlined"
+                  />
+                </Typography>
+                <Typography>
+                  <TextField
+                    variant="outlined"
+                    type="number"
+                    classes={{ root: "textwidth" }}
+                    label="Number of options"
+                    value={question.options.length}
+                    onChange={e => {
+                      handleFieldChangeNumber(e.target.value);
+                    }}
+                  />
+                </Typography>
+                {question.options.map((val, ind) => {
+                  return (
+                    <div key={ind}>
+                      {
+                        <Typography>
+                          <TextField
+                            id="outlined-name"
+                            classes={{ root: "textwidth" }}
+                            label="options"
+                            value={question.options[ind]}
+                            onChange={e => {
+                              handleOnChangeOption(ind, e.target.value);
+                            }}
+                            margin="normal"
+                            variant="outlined"
+                          />
+                        </Typography>
+                      }
+                    </div>
+                  );
+                })}
+                <Typography>
+                  <TextField
+                    id="outlined-name"
+                    label="Answer"
+                    value={question.q_answer}
+                    classes={{ root: "textwidth" }}
+                    onChange={e =>
+                      handleFieldChange("q_answer", e.target.value, "question")
+                    }
+                    margin="normal"
+                    variant="outlined"
+                  />
+                </Typography>
+                <Typography>
+                  <TextField
+                    id="outlined-name"
+                    label="Timer"
+                    type="number"
+                    value={question.timer}
+                    classes={{ root: "textwidth" }}
+                    onChange={e =>
+                      handleFieldChange("timer", e.target.value, "question")
+                    }
+                    margin="normal"
+                    variant="outlined"
+                  />
+                </Typography>
+                <DialogActions>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    classes={{ root: "buttonStyle" }}
+                    onClick={() =>
+                      fun(
+                        toggleDialog,
+                        handleOnCreate,
+                        handleOnQuestions,
+                        handleOnUpdate,
+                        question
+                      )
+                    }
+                  >
+                    {toggleDialog.buttonName}
+                  </Button>
+                </DialogActions>
+              </DialogContent>
             </Dialog>
           </Grid>
         </Grid>
