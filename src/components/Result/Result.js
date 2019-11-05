@@ -1,127 +1,119 @@
-import React,{Component} from 'react';
-import Card from '@material-ui/core/Card'
+import React, { Component } from "react";
+import Card from "@material-ui/core/Card";
 import {
-    
-    Grid,
-    Paper,
-    Table,
-    TableHead,
-    TableCell,
-    TableRow,
-    Button,
-    Input,
-    InputLabel,
-    InputBase
-  } from "@material-ui/core";
+  Grid,
+  Paper,
+  Table,
+  TableHead,
+  TableCell,
+  TableRow,
+  Button,
+  Input,
+  InputLabel,
+  InputBase,
+  Icon
+} from "@material-ui/core";
 import axios from "axios";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-class Result extends Component{
- state={
-     result:[], userId:null
- }
+import MaterialTable from "material-table";
+class Result extends Component {
+  state = {
+    result: [],
+    userId: null
+  };
 
-    componentDidMount() {
-
-        axios
-          .get(
-            "http://localhost:8086/api/result",
-            
-          )
-          .then(response => {
-            this.setResult( response.data.result);
-          })
-          .catch(err => console.log(err));
-      }
-      setResult= result=>{
-        this.setState({result})
-        console.log(result, "resultssss");
-      }
-
-     uniqueResult=()=>{
-          const {userId}= this.state;
-          if(userId!=null){
-            axios
-            .get(
-              `http://localhost:8086/api/result/${userId}`,
-              
-            )
-            .then(response => {
-                if(response.data.result.length==0){
-                    alert("Please enter a valid User ID")
-                }
-                else{
-                    this.setResult( response.data.result); 
-                }
-              
-            })
-            .catch(err => console.log(err));
+  uniqueResult = () => {
+    const { userId } = this.state;
+    if (userId != null) {
+      axios
+        .get(`https://pure-wave-01085.herokuapp.com/api/result/${userId}`)
+        .then(response => {
+          if (response.data.result.length == 0) {
+            alert("Please enter a valid User ID");
+          } else {
+            this.setResult(response.data.result);
           }
-       
+        })
+        .catch(err => console.log(err));
+    }
+  };
+
+  handleChange = e => {
+    this.setState({
+      userId: e
+    });
+  };
+
+  render() {
+    const { handleChange, uniqueResult } = this;
+
+    const { result_1 } = this.props;
+    const { result = [], userId } = this.state;
+    const columns = [
+      {
+        title: "Sr. No.",
+        field: "index"
+      },
+      {
+        title: "User Id",
+        field: "r_user_id"
+      },
+      {
+        title: "Marks",
+        field: "marks"
+      },
+      {
+        title: "Percnetage",
+        field: "percentage"
+      },
+      {
+        title: "Result",
+        field: "result"
       }
+    ];
+    const data = Object.keys(result_1).map((result, index) => ({
+      index: index + 1,
+      uuid: result_1[index].uuid,
+      r_user_id: result_1[index].r_user_id,
+      marks: result_1[index].marks,
+      percentage: result_1[index].percentage,
+      result: result_1[index].result
+    }));
+    return (
+      <Grid container>
+        <Grid item md={12} className="icon"></Grid>
 
-      handleChange= (e)=>{
-       this.setState({
-           userId:e
-       })
-      }
-
-
-      render(){
-        console.log(this.props.result_1,"result_1")
-          const {handleChange, uniqueResult} = this;
-          const {result =[],userId} = this.state;
-          return (<div>
-            <Card style={{color:"black"}}><h2 style={{ marginLeft:"40%"}}>Candidate Result</h2></Card>
-
-              <InputBase  type='text' placeholder="Search…" value={userId} onChange={(e)=>handleChange(e.target.value)}/>
-            <button onClick={uniqueResult}><img style={{height:'3%'}} src="https://img.icons8.com/metro/20/000000/search.png"></img></button>
-            <Grid container>
-            <Grid item md={12} className="icon">
-            
-           </Grid>
-           
-              <Grid item md={1}></Grid>
-              <Grid item md={10 }>
-                <Paper>
-                  <Table>
-                    <TableHead>
-                      <TableRow >
-                        <TableCell style={{color:'black'}}>Sr. No.</TableCell>
-                        <TableCell style={{color:'black'}}>User Id</TableCell>
-                        <TableCell style={{color:'black'}}>Marks</TableCell>
-                        <TableCell style={{color:'black'}}>Percentage</TableCell>
-                        <TableCell style={{color:'black'}}>Result</TableCell>
-                        
-                      </TableRow>
-                      {result.map((result, index1) => {
-                        return (
-                          <TableRow key={index1}>
-                            <TableCell>{index1+1}</TableCell>
-                            <TableCell>{result.r_user_id}</TableCell>
-                            <TableCell>{result.marks}</TableCell>
-                            <TableCell>{result.percentage}</TableCell>
-                            
-                            <TableCell>{result.result}</TableCell>
-                           
-                              
-                          </TableRow>
-                        );
-                      })}
-                    </TableHead>
-                  </Table>
-                </Paper>
-              </Grid>
-            <Grid item md={1}></Grid>
-         
-         </Grid></div>
-          );
-      }
-    
+        <Grid item md={1}></Grid>
+        <Grid item md={10}>
+          <Paper>
+            <MaterialTable
+              options={{
+                search: true,
+                rowStyle: {
+                  backgroundColor: "#FFFFFF"
+                },
+                headerStyle: {
+                  backgroundColor: "#EEEE"
+                }
+              }}
+              title="Candidate Result"
+              data={data}
+              columns={columns}
+            />
+          </Paper>
+        </Grid>
+        <Grid item md={1}></Grid>
+      </Grid>
+    );
+  }
 }
 const mapStateToProps = ({ result_1 }) => {
   return {
     result_1
   };
 };
-export default connect(mapStateToProps,null)(withRouter(Result));
+export default connect(
+  mapStateToProps,
+  null
+)(withRouter(Result));

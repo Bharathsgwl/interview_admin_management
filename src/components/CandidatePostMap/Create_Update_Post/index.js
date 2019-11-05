@@ -12,7 +12,10 @@ import {
   InputLabel,
   Select,
   Input,
-  MenuItem
+  MenuItem,
+  DialogContent,
+  DialogActions,
+  OutlinedInput
 } from "@material-ui/core";
 import {
   handleOnToggleDialog,
@@ -28,7 +31,7 @@ class Create_Update_Post extends React.Component {
     var { candidatePost_Map } = this.props;
     const uuid1 = require("uuid/v4");
     axios
-      .post("http://localhost:8086/api/candidate_post_map", {
+      .post("https://pure-wave-01085.herokuapp.com/api/candidate_post_map", {
         uuid: uuid1(),
         post_id: candidatePost_Map.post_id,
         user_id: candidatePost_Map.user_id,
@@ -42,19 +45,19 @@ class Create_Update_Post extends React.Component {
   handleOnUpdateCandidatePost = () => {
     var { candidatePost_Map } = this.props;
     var { uuid, post_id, user_id } = candidatePost_Map;
-    console.log("APMAN", post_id, user_id);
-    debugger
-    axios.put(`http://localhost:8086/api/candidate_post_map`, {
-      "uuid": uuid,
-      "user_id": user_id,
-      "post_id": post_id,
-      "updated_by": "GWLADMIN124",
-    })
+    debugger;
+    axios
+      .put(`https://pure-wave-01085.herokuapp.com/api/candidate_post_map`, {
+        uuid: uuid,
+        user_id: user_id,
+        post_id: post_id,
+        updated_by: "Bharath"
+      })
       .then(response => {
         debugger;
         console.log(response.data, "res");
         debugger;
-      })
+      });
     this.props.handleOnToggleDialog();
   };
   handleClose = () => {
@@ -72,24 +75,25 @@ class Create_Update_Post extends React.Component {
       candidatePost,
       posts,
       candidates
-
     } = this.props;
 
     console.log(candidates, "User");
 
     const { handleOnUpdateCandidatePost, handleOnCreateCandidatePost } = this;
     const { openDialog = false } = toggleDialog || {};
-    const fun = (toggleDialog, handleOnCreateCandidatePost, handleOnUpdateCandidatePost) => {
+    const fun = (
+      toggleDialog,
+      handleOnCreateCandidatePost,
+      handleOnUpdateCandidatePost
+    ) => {
       if (toggleDialog.buttonName == "Create") {
-
         return this.handleOnCreateCandidatePost();
-        debugger
+        debugger;
       } else if (toggleDialog.buttonName == "Update") {
         return this.handleOnUpdateCandidatePost();
-        debugger
+        debugger;
       }
     };
-    console.log("candidatePost_Map", candidatePost_Map);
     return (
       <div>
         <Grid container>
@@ -98,78 +102,92 @@ class Create_Update_Post extends React.Component {
               onClose={handleOnToggleDialog}
               aria-labelledby="simple-dialog-title"
               open={openDialog}
-              fullWidth="true"
-              maxWidth="md"
+              // fullWidth="true"
+              // maxWidth="md"
             >
-              <DialogTitle id="simple-dialog-title">
-                {toggleDialog.title}
-                <li
-                  class="material-icons"
-                  style={{ float: "right" }}
-                  onClick={() => this.handleClose()}
-                >
-                  clear
-                </li>
-              </DialogTitle>
-
-
-              <FormControl variant="outlined">
-                <InputLabel htmlFor="outlined-age-simple">Post</InputLabel>
-                <Select
-                  value={this.props.candidatePost_Map.post_id}
-                  onChange={e => {
-                    handleFieldChange("post_id", e.target.value, "candidatePost_Map");
-                  }}
-                  input={<Input id="select-multiple" />}
-                >
-                  {posts.map((post, index) => {
-                    return (
-                      <MenuItem key={post.uuid} value={post.uuid}>
-                        {post.post_name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-
-              <FormControl variant="outlined">
-                <InputLabel htmlFor="outlined-age-simple">Candidate</InputLabel>
-                <Select
-                  value={this.props.candidatePost_Map.user_id}
-                  onChange={e => {
-                    handleFieldChange("user_id", e.target.value, "candidatePost_Map");
-                  }}
-                  input={<Input id="select-multiple" />}
-                >
-                  {candidates.map((user, index) => {
-                    return (
-                      <MenuItem key={user.uuid} value={user.uuid}>
-                        {user.user_name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-
-
-
-
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={() =>
-                  fun(
-                    toggleDialog,
-                    handleOnCreateCandidatePost,
-                    handleOnCandidatePost,
-                    handleOnUpdateCandidatePost,
-                    candidatePost
-                  )
-                }
-              >
-                {toggleDialog.buttonName}
-              </Button>
-
+              <DialogContent style={{ width: 332 }}>
+                <DialogTitle id="simple-dialog-title">
+                  {toggleDialog.title}
+                  <li
+                    class="material-icons"
+                    style={{ float: "right" }}
+                    onClick={() => this.handleClose()}
+                  >
+                    clear
+                  </li>
+                </DialogTitle>
+                <Typography>
+                  <FormControl variant="outlined">
+                    <InputLabel htmlFor="outlined-age-simple">Post</InputLabel>
+                    <Select
+                      classes={{ root: "selectWidth" }}
+                      value={this.props.candidatePost_Map.post_id}
+                      onChange={e => {
+                        handleFieldChange(
+                          "post_id",
+                          e.target.value,
+                          "candidatePost_Map"
+                        );
+                      }}
+                      input={<OutlinedInput id="outlined-age-simple" />}
+                    >
+                      {posts.map((post, index) => {
+                        return (
+                          <MenuItem key={post.uuid} value={post.uuid}>
+                            {post.post_name}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </Typography>
+                <br/>
+                <Typography>
+                  <FormControl variant="outlined">
+                    <InputLabel htmlFor="outlined-age-simple">
+                      Candidate
+                    </InputLabel>
+                    <Select
+                      classes={{ root: "selectWidth" }}
+                      value={this.props.candidatePost_Map.user_id}
+                      onChange={e => {
+                        handleFieldChange(
+                          "user_id",
+                          e.target.value,
+                          "candidatePost_Map"
+                        );
+                      }}
+                      input={<OutlinedInput id="outlined-age-simple" />}
+                    >
+                      {candidates.map((user, index) => {
+                        return (
+                          <MenuItem key={user.uuid} value={user.uuid}>
+                            {user.user_name}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </Typography>
+                <DialogActions>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    classes={{ root: "buttonStyle" }}
+                    onClick={() =>
+                      fun(
+                        toggleDialog,
+                        handleOnCreateCandidatePost,
+                        handleOnCandidatePost,
+                        handleOnUpdateCandidatePost,
+                        candidatePost
+                      )
+                    }
+                  >
+                    {toggleDialog.buttonName}
+                  </Button>
+                </DialogActions>
+              </DialogContent>
               {/* <TextField
                 id="outlined-name"
                 label="Post_Name"
@@ -191,8 +209,6 @@ class Create_Update_Post extends React.Component {
                 margin="normal"
                 variant="outlined"
               /> */}
-
-
             </Dialog>
           </Grid>
         </Grid>
@@ -200,7 +216,15 @@ class Create_Update_Post extends React.Component {
     );
   }
 }
-const mapStateToProps = ({ posts, post, toggleDialog, candidatePost_Map, candidatePost, Selected_Users, candidates }) => {
+const mapStateToProps = ({
+  posts,
+  post,
+  toggleDialog,
+  candidatePost_Map,
+  candidatePost,
+  Selected_Users,
+  candidates
+}) => {
   return {
     posts,
     post,

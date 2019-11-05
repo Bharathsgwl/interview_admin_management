@@ -1,0 +1,13 @@
+.dialog_size{
+  width:100% !important
+}
+.buttonStyle{
+  margin: auto !important;
+}
+.textwidth{
+  width:300px !important;
+}
+.closeIconSTyle{
+  float: right !important;
+  vertical-align: sub !important;
+}

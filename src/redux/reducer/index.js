@@ -13,6 +13,10 @@ const applicationIntialState = {
     created_by: "",
     updated_by: ""
   },
+  snackBar: {
+    snackbarOpen: false
+  },
+  message: "",
   priority1: ["Low", "Medium", "High"],
   instructions: [],
   instruction: {
@@ -30,13 +34,15 @@ const applicationIntialState = {
   },
   candidatePost: [],
   candidatePost_Map: {
-    uuid:"",
-    post_id: [], user_id: [], created_by: '',
+    uuid: "",
+    post_id: [],
+    user_id: [],
+    created_by: "",
     Selected_Users: []
   },
-result_1:[],
-  candidates : [],
-  response:[],
+  result_1: [],
+  candidates: [],
+  response: [],
 
   question: {
     index: 1,
@@ -55,11 +61,7 @@ result_1:[],
   login: {
     username: "",
     password: ""
-  },
-  snackBar: {
-    snackbarOpen: false
-  }
-
+  },user:[]
 };
 
 const reducer = (state = applicationIntialState, action) => {
@@ -95,8 +97,33 @@ const reducer = (state = applicationIntialState, action) => {
         [candidatePost]: postMapValue
       };
 
+    // case actionTypes.HANDLE_ON_RESULT:
+    //   var { result, val } = action.payload;
+    //   // console.log(val,"val");
+    //   return {
+    //     ...state,
+    //     [question]: val
+    //   };
+    case actionTypes.HANDLE_ON_CANDIDATEPOST:
+      var { candidatePost } = state;
+      var { candidatePost, postMapValue } = action.payload;
+      return {
+        ...state,
+        [candidatePost]: postMapValue
+      };
+
     case actionTypes.HANDLE_ON_TOGGLE_DIALOG:
-      var { toggleDialog, question, questions, post, posts, candidatePost_Map, candidatePost, instructions, instruction } = state;
+      var {
+        toggleDialog,
+        question,
+        questions,
+        post,
+        posts,
+        candidatePost_Map,
+        candidatePost,
+        instructions,
+        instruction
+      } = state;
       var { openDialog, buttonName, title } = toggleDialog;
       var { buttonName, title, index } = action.payload;
       openDialog = !openDialog;
@@ -122,11 +149,12 @@ const reducer = (state = applicationIntialState, action) => {
           instruction = {
             ...instructions[index],
             index
-          }
+          };
         } else {
           candidatePost_Map = {
-            ...candidatePost[index], index
-          }
+            ...candidatePost[index],
+            index
+          };
         }
       }
       debugger;
@@ -136,7 +164,9 @@ const reducer = (state = applicationIntialState, action) => {
         question,
         posts,
         post,
-        questions, candidatePost_Map, candidatePost,
+        questions,
+        candidatePost_Map,
+        candidatePost,
         instruction,
         instructions
       };
@@ -243,12 +273,12 @@ const reducer = (state = applicationIntialState, action) => {
       return {
         ...state
       };
-case actionTypes.HANDLE_ON_RESPONSE_CLICK:
-  var {history}=action.payload;
-  history.push("/menu/response");
-  return{
-    ...state
-  }
+    case actionTypes.HANDLE_ON_RESPONSE_CLICK:
+      var { history } = action.payload;
+      history.push("/menu/response");
+      return {
+        ...state
+      };
     // case actionTypes.ON_CLICK_LOGIN:
     //   var history = action.payload.history;
     //   var snackBar = state;
@@ -278,28 +308,26 @@ case actionTypes.HANDLE_ON_RESPONSE_CLICK:
       var snackbarOpen = state.snackBar;
       var message = state.snackBar;
       snackbarOpen = !snackbarOpen;
-      console.log(history, "histu")
+      console.log(history, "histu");
       debugger;
       axios
         .post(`https://evening-dawn-93464.herokuapp.com/api/verify`, {
-          "auth_token": sessionStorage.getItem('auth_token')
+          auth_token: sessionStorage.getItem("auth_token")
         })
         .then(response => {
           if (response.data.isloggedIn === false) {
             debugger;
             console.log("Resp1", response);
-            history.push("/")
-
+            history.push("/");
           } else {
             debugger;
             console.log("Resp2", response);
-
           }
-        })
+        });
 
     case actionTypes.HANDLE_ON_SNACKBAR_CLOSE:
       var { snackBar } = state;
-      var { snackbarOpen } = state.snackBar;
+      var { snackbarOpen } = state;
       debugger;
       snackbarOpen = !snackbarOpen;
       debugger;
@@ -307,7 +335,13 @@ case actionTypes.HANDLE_ON_RESPONSE_CLICK:
         ...state,
         snackbarOpen
       };
-      
+    case actionTypes.SET_STATES_FROM_RESPONSE:
+      var { attribute, values } = action.payload;
+      console.log(attribute, values, "user");
+      return {
+        ...state,
+        [attribute]: values
+      };
 
     default:
       return state;

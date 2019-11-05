@@ -149,7 +149,6 @@ const Menu = props => {
   const getComponent = componentName => {
     if (componentName) {
       import(`./${componentName}`).then(module => {
-        console.log(module, "module");
 
         return { Component: module.default };
       });
@@ -186,7 +185,7 @@ const Menu = props => {
   const displayPosts = () => {
     let { handleOnPosts, history } = props;
     axios
-      .get("http://localhost:8086/api/post")
+      .get("https://pure-wave-01085.herokuapp.com/api/post")
       .then(response => {
         let post_s = response.data.posts.map(p => p);
         props.handleOnPosts("posts", post_s);
@@ -198,7 +197,7 @@ const Menu = props => {
     var { handleOnQuestions, history, instructions } = props;
     let instruction_s = [];
     axios
-      .get("http://localhost:8086/api/exam_rules")
+      .get("https://pure-wave-01085.herokuapp.com/api/exam_rules")
       .then(response => {
         instruction_s = response.data.exam_rules.map(q => q);
         props.handleOnQuestions("instructions", instruction_s);
@@ -210,7 +209,7 @@ const Menu = props => {
     var { handleOnQuestions, history, questions } = props;
     let question_s = [];
     axios
-      .get("http://localhost:8086/api/question_section")
+      .get("https://pure-wave-01085.herokuapp.com/api/question_section")
       .then(response => {
         console.log(response.data,"responsequesion")
         question_s = response.data.questions.map(q => q);
@@ -223,7 +222,7 @@ const Menu = props => {
     var { handleOnCandidatePost, history } = props;
     let candidatePostMap_s = []
     axios
-      .get("http://localhost:8086/api/candidate_post_map")
+      .get("https://pure-wave-01085.herokuapp.com/api/candidate_post_map")
       .then(response => {
         console.log("data", response.data);
 
@@ -235,14 +234,14 @@ const Menu = props => {
 
 
   const displayResponse = () => {
-    var { history } = props;
-    let question_s = [];
+    var { history ,response} = props;
+
     axios
-      .get("http://localhost:8086/api/response")
+      .get("https://pure-wave-01085.herokuapp.com/api/response")
       .then(response => {
-        question_s = response.data.result.map(q => q);
+      let  question_s = response.data.result.map(q => q);
         console.log(response.data, "res")
-        props.handleOnQuestions("questions", question_s);
+        props.handleOnQuestions("response", question_s);
       });
     return (handleAuthenticaton(history), props.handleOnResponseClick(history));
   };
@@ -251,10 +250,9 @@ const Menu = props => {
     var { history } = props;
     let candidate_result = [];
     axios
-      .get("http://localhost:8086/api/result")
+      .get("https://pure-wave-01085.herokuapp.com/api/result")
       .then(response => {
         let candidate_result = response.data.result.map(q => q);
-        console.log(response.data, "response")
         props.handleOnQuestions("result_1", candidate_result);
       });
 
@@ -372,12 +370,12 @@ const Menu = props => {
   );
 };
 
-const mapStateToProps = ({ open, actionList, history, posts, instructions }) => {
+const mapStateToProps = ({ open, actionList, history, posts, instructions ,response}) => {
   return {
     open,
     actionList,
     history,
-    posts, instructions
+    posts, instructions,response
   };
 };
 const mapDispatchToProps = dispatch => {

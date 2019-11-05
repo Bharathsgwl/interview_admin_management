@@ -1,5 +1,6 @@
 import React from "react";
 import Snackbar from "@material-ui/core/Snackbar";
+import './index.css';
 import {
   Card,
   CardContent,
@@ -13,8 +14,8 @@ import { handleOnSnackBarClose } from "../../redux/actions";
 import CloseIcon from "@material-ui/icons/Close";
 
 const SnackBar = props => {
-  console.log(props);
-  const { message, snackbarOpen, handleOnSnackBarClose } = props;
+  console.log(props.message,"message");
+  const { message, handleOnSnackBarClose,snackbarOpen } = props;
   return (
     <Snackbar
       anchorOrigin={{
@@ -22,7 +23,7 @@ const SnackBar = props => {
         horizontal: "right-center"
       }}
       open={snackbarOpen}
-      autoHideDuration={3000}
+      autoHideDuration={30000}
       onClose={handleOnSnackBarClose}
       ContentProps={{
         "aria-describedby": "message-id"

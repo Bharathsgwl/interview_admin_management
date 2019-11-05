@@ -14,63 +14,76 @@ import {
 import CloseIcon from "@material-ui/icons/Close";
 import SnackBar from "../SnackBar";
 import { connect } from "react-redux";
-import { handleFieldChange, onClickLogin } from "../../redux/actions";
+import {
+  handleFieldChange,
+  onClickLogin,
+  handleOnSnackBarClose,
+  setStatesFromResponse
+} from "../../redux/actions";
 import * as actionTypes from "../../redux/actionTypes";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
 class Login extends React.Component {
-
   // componentDidMount() {
   //   debugger;
   //   console.log("Component is mounting",this.props.auth_token);
 
   //   this.handleValidation();
-  // }
+  //
 
   onClickLogin = () => {
     debugger;
     var {
-      snackBar,
       login,
       message,
-      history, auth_token
+      history,
+      auth_token,
+      snackbarOpen,
+      setStatesFromResponse,
+      handleOnSnackBarClose
     } = this.props;
     debugger;
     const { handleSessionStorage, handleValidation } = this;
     var { username, password } = login;
-    var { snackbarOpen } = snackBar;
-    // snackbarOpen = !snackbarOpen;
     debugger;
 
     if (login.username == "" && login.password == "") {
-      message = "Enter Credentials";
-      snackbarOpen = !snackbarOpen;
+      let msg = "Enter Credentials";
+      setStatesFromResponse("message", msg);
+      console.log(msg, "msggg");
+      handleOnSnackBarClose();
     } else if (login.username.length <= 4) {
-      message = "Credentials too short";
-      snackbarOpen = !snackbarOpen;
+      let msg = "Credentials should be greater than 4";
+      setStatesFromResponse("message", msg);
+      handleOnSnackBarClose();
     } else {
-
       debugger;
       axios
         .post(`https://evening-dawn-93464.herokuapp.com/api/login`, {
-          "user_name": username,
-          "password": password
+          user_name: username,
+          password: password
         })
         .then(response => {
           if (response.data.login_message) {
             debugger;
             console.log(response.data.login_message);
-            message = response.data.login_message
+            message = response.data.login_message;
+            setStatesFromResponse("message", message);
+            handleOnSnackBarClose();
           } else if (response.data.all) {
             debugger;
             console.log(response.data);
             auth_token = response.data.auth_token;
-            return (handleSessionStorage(response.data.all[0], response.data.auth_token),handleValidation());
+            return (
+              handleSessionStorage(
+                response.data.all[0],
+                response.data.auth_token
+              ),
+              handleValidation()
+            );
           }
-          debugger;
-        })
+        });
     }
-
   };
 
   handleSessionStorage = (data, auth_token) => {
@@ -84,14 +97,13 @@ class Login extends React.Component {
     debugger;
     axios
       .post(`https://evening-dawn-93464.herokuapp.com/api/validate`, {
-        "auth_token": sessionStorage.getItem("auth_token")
+        auth_token: sessionStorage.getItem("auth_token")
       })
       .then(response => {
         debugger;
         console.log("auth resp", response.data);
-
-      })
-      debugger;
+      });
+    debugger;
   };
 
   render() {
@@ -111,7 +123,7 @@ class Login extends React.Component {
                     variant="h5"
                   >
                     GoodWorks Colloquio
-                </Typography>
+                  </Typography>
                 </Grid>
               </Toolbar>
             </AppBar>
@@ -135,7 +147,9 @@ class Login extends React.Component {
                     margin="normal"
                     variant="outlined"
                     value={login.username}
-                    onChange={e => handleFieldChange("username", e.target.value, "login")}
+                    onChange={e =>
+                      handleFieldChange("username", e.target.value, "login")
+                    }
                   />
                 </Typography>
                 <Typography color="textSecondary" gutterBottom>
@@ -145,7 +159,9 @@ class Login extends React.Component {
                     type="password"
                     margin="normal"
                     variant="outlined"
-                    onChange={e => handleFieldChange("password", e.target.value, "login")}
+                    onChange={e =>
+                      handleFieldChange("password", e.target.value, "login")
+                    }
                     value={login.password}
                   />
                 </Typography>
@@ -154,12 +170,10 @@ class Login extends React.Component {
                   <Button
                     variant="contained"
                     style={{ background: "#009688", color: "white" }}
-                    onClick={
-                      onClickLogin
-                    }
+                    onClick={onClickLogin}
                   >
                     SUBMIT
-                </Button>
+                  </Button>
                 </Typography>
               </CardContent>
             </Card>
@@ -169,20 +183,31 @@ class Login extends React.Component {
       </React.Fragment>
     );
   }
-};
-const mapStateToProps = ({ snackBar, login, message, history, auth_token }) => {
+}
+const mapStateToProps = ({
+  snackBar,
+  snackbarOpen,
+  login,
+  message,
+  history,
+  auth_token
+}) => {
   return {
-    snackBar, login, message, history, auth_token
+    snackBar,
+    login,
+    message,
+    snackbarOpen,
+    history,
+    auth_token
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
-    // onClickLogin: history => dispatch(onClickLogin(history)),
-
-    handleFieldChange: (property1, value1, propertyObject) => {
-      debugger;
-      dispatch(handleFieldChange(property1, value1, propertyObject));
-    }
+    handleFieldChange: (property1, value1, propertyObj) =>
+      dispatch(handleFieldChange(property1, value1, propertyObj)),
+    handleOnSnackBarClose: () => dispatch(handleOnSnackBarClose()),
+    setStatesFromResponse: (attribute, val) =>
+      dispatch(setStatesFromResponse(attribute, val))
   };
 };
 export default connect(

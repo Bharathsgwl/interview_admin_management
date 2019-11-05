@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import Card from '@material-ui/core/Card';
+import React, { Component } from "react";
+import Card from "@material-ui/core/Card";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
@@ -14,79 +14,77 @@ import {
   Button
 } from "@material-ui/core";
 import axios from "axios";
+import MaterialTable from "material-table";
 class Response extends Component {
   state = {
-    result: []
-  }
+    response: []
+  };
 
   componentDidMount() {
-
     axios
-      .get(
-        "http://localhost:8086/api/response",
-
-      )
+      .get("https://pure-wave-01085.herokuapp.com/api/candidate_post_map")
       .then(response => {
-        this.setResult(response.data.result);
+        console.log(response);
       })
       .catch(err => console.log(err));
   }
-  setResult = result => {
-    this.setState({ result })
-    // console.log(result, "resultssss");
-  }
-
-
-
-
-
 
   render() {
-
-    const { result = [] } = this.state;
-    return (<div>
-      <Card style={{ color: "black" }}><h2 style={{ marginLeft: "40%" }}>Users Rating<img src="https://img.icons8.com/doodle/48/000000/star--v2.png" /></h2></Card>
-
-
+    const { response } = this.props;
+    const columns = [
+      {
+        title: "Sr. No.",
+        field: "index"
+      },
+      {
+        title: "Question",
+        field: "ques"
+      },
+      {
+        title: "Rating",
+        field: "rate"
+      }
+    ];
+    const data = Object.keys(response).map((rspons, index) => ({
+      index: index + 1,
+      ques: response[index].ques,
+      rate: response[index].rate
+    }));
+    return (
       <Grid container>
-        <Grid item md={12} className="icon">
-
-        </Grid>
+        <Grid item md={12} className="icon"></Grid>
 
         <Grid item md={1}></Grid>
         <Grid item md={10}>
           <Paper>
-            <Table>
-              <TableHead>
-                <TableRow >
-                  <TableCell style={{ color: 'black' }}>Sr. No.</TableCell>
-                  <TableCell style={{ color: 'black' }}>Question</TableCell>
-                  <TableCell style={{ color: 'black' }}>Rating</TableCell>
-
-
-                </TableRow>
-                {result.map((result, index1) => {
-                  return (
-                    <TableRow key={index1}>
-                      <TableCell>{index1 + 1}</TableCell>
-                      <TableCell>{result.ques}</TableCell>
-                      <TableCell>{result.rate}</TableCell>
-
-
-
-                    </TableRow>
-                  );
-                })}
-              </TableHead>
-            </Table>
+            <MaterialTable
+              options={{
+                search: true,
+                rowStyle: {
+                  backgroundColor: "#FFFFFF"
+                },
+                headerStyle: {
+                  backgroundColor: "#EEEE"
+                }
+              }}
+              title={
+                <h5>
+                  Users Rating
+                  <img
+                    src="https://img.icons8.com/doodle/48/000000/star--v2.png"
+                    style={{ verticalAlign: "middle" }}
+                  />
+                </h5>
+              }
+              data={data}
+              columns={columns}
+            />
           </Paper>
         </Grid>
         <Grid item md={1}></Grid>
-
-      </Grid></div>
+      </Grid>
     );
   }
-
 }
 const mapStateToProps = ({ response }) => {
   return {
@@ -94,4 +92,7 @@ const mapStateToProps = ({ response }) => {
   };
 };
 
-export default connect(mapStateToProps, null)(withRouter(Response));
+export default connect(
+  mapStateToProps,
+  null
+)(withRouter(Response));

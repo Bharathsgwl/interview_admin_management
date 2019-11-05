@@ -149,3 +149,12 @@ export const handleAuthenticaton = (history) => {
     }
   };
 };
+
+export const setStatesFromResponse=(attribute,values)=>{
+  return{
+    type:actionTypes.SET_STATES_FROM_RESPONSE,
+    payload:{
+      attribute,values
+    }
+  };
+};
