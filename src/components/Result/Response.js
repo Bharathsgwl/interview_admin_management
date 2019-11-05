@@ -33,7 +33,7 @@ class Response extends Component {
   }
   setResult = result => {
     this.setState({ result })
-    console.log(result, "resultssss");
+    // console.log(result, "resultssss");
   }
 
 
