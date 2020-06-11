@@ -211,7 +211,7 @@ const Menu = props => {
     axios
       .get("https://pure-wave-01085.herokuapp.com/api/question_section")
       .then(response => {
-        console.log(response.data,"responsequesion")
+        console.log(response.data, "responsequesion")
         question_s = response.data.questions.map(q => q);
         props.handleOnQuestions("questions", question_s);
       });
@@ -234,12 +234,12 @@ const Menu = props => {
 
 
   const displayResponse = () => {
-    var { history ,response} = props;
+    var { history, response } = props;
 
     axios
       .get("https://pure-wave-01085.herokuapp.com/api/response")
       .then(response => {
-      let  question_s = response.data.result.map(q => q);
+        let question_s = response.data.result.map(q => q);
         console.log(response.data, "res")
         props.handleOnQuestions("response", question_s);
       });
@@ -370,12 +370,12 @@ const Menu = props => {
   );
 };
 
-const mapStateToProps = ({ open, actionList, history, posts, instructions ,response}) => {
+const mapStateToProps = ({ open, actionList, history, posts, instructions, response }) => {
   return {
     open,
     actionList,
     history,
-    posts, instructions,response
+    posts, instructions, response
   };
 };
 const mapDispatchToProps = dispatch => {

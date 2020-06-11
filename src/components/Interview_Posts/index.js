@@ -1,5 +1,5 @@
 import React from "react";
-
+import "./index.css";
 import {
   Typography,
   Grid,
@@ -18,7 +18,6 @@ import * as actionTypes from "../../redux/actions";
 import axios from "axios";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import Create_Update_Post from "./Create_Update_Post";
-import SpinnerComponent from "../SpinnerComponent";
 import MaterialTable from "material-table";
 class Interview_Posts extends React.Component {
   deletePost = (e, uuid) => {
@@ -99,18 +98,17 @@ class Interview_Posts extends React.Component {
     }));
     return (
       <Grid container>
-        <Grid item md={12} className="icon">
-          <AddCircleIcon
-            button
-            style={{ fontSize: 40, color: "gray" }}
-            dialog={toggleDialog}
-            onClick={() => {
-              handleOnToggleDialog("Create Post", "Create");
-            }}
-          />
-        </Grid>
-        <Grid item md={1}></Grid>
-        <Grid item md={10}>
+        <Grid item md={11} xs={12} sm={12}>
+          <Grid item md={12} xs={12} sm={12} style={{ textAlign: "end" }}>
+            <AddCircleIcon
+              button
+              classes={{ root: "icon-style" }}
+              dialog={toggleDialog}
+              onClick={() => {
+                handleOnToggleDialog("Create Post", "Create");
+              }}
+            />
+          </Grid>
           <Paper>
             <Table>
               <TableCell></TableCell>

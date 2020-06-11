@@ -25,14 +25,13 @@ import { withRouter } from "react-router-dom";
 import axios from "axios";
 class Login extends React.Component {
   // componentDidMount() {
-  //   debugger;
+  //   
   //   console.log("Component is mounting",this.props.auth_token);
 
   //   this.handleValidation();
   //
 
   onClickLogin = () => {
-    debugger;
     var {
       login,
       message,
@@ -42,10 +41,8 @@ class Login extends React.Component {
       setStatesFromResponse,
       handleOnSnackBarClose
     } = this.props;
-    debugger;
     const { handleSessionStorage, handleValidation } = this;
     var { username, password } = login;
-    debugger;
 
     if (login.username == "" && login.password == "") {
       let msg = "Enter Credentials";
@@ -57,7 +54,6 @@ class Login extends React.Component {
       setStatesFromResponse("message", msg);
       handleOnSnackBarClose();
     } else {
-      debugger;
       axios
         .post(`https://evening-dawn-93464.herokuapp.com/api/login`, {
           user_name: username,
@@ -65,13 +61,11 @@ class Login extends React.Component {
         })
         .then(response => {
           if (response.data.login_message) {
-            debugger;
             console.log(response.data.login_message);
             message = response.data.login_message;
             setStatesFromResponse("message", message);
             handleOnSnackBarClose();
           } else if (response.data.all) {
-            debugger;
             console.log(response.data);
             auth_token = response.data.auth_token;
             return (
@@ -94,16 +88,13 @@ class Login extends React.Component {
   };
 
   handleValidation = () => {
-    debugger;
     axios
       .post(`https://evening-dawn-93464.herokuapp.com/api/validate`, {
         auth_token: sessionStorage.getItem("auth_token")
       })
       .then(response => {
-        debugger;
         console.log("auth resp", response.data);
       });
-    debugger;
   };
 
   render() {
@@ -136,7 +127,7 @@ class Login extends React.Component {
             style={{ background: "#009688", height: "578px", width: "50000px" }}
           ></Grid>
 
-          <Grid item md={5} classes={{ root: "displaying" }}>
+          <Grid item md={5} xs={12} classes={{ root: "displaying" }}>
             <Card classes={{ root: "card" }}>
               <CardContent>
                 <Typography>Login</Typography>
@@ -170,7 +161,7 @@ class Login extends React.Component {
                   <Button
                     variant="contained"
                     style={{ background: "#009688", color: "white" }}
-                    onClick={onClickLogin}
+                    onClick={() => { onClickLogin() }}
                   >
                     SUBMIT
                   </Button>

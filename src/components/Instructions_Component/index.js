@@ -1,5 +1,5 @@
 import React from "react";
-
+import "./index.css"
 import {
   Typography,
   Grid,
@@ -18,7 +18,6 @@ import * as actionTypes from "../../redux/actions";
 import axios from "axios";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import Create_Update_Instruction from "./Create_Update_Instruction";
-import SpinnerComponent from "../SpinnerComponent";
 import MaterialTable from "material-table";
 class Instructions_Component extends React.Component {
   // displayPosts(){
@@ -50,7 +49,7 @@ class Instructions_Component extends React.Component {
       handleOnToggleDialog,
       post
     } = this.props;
-    const { deleteInstruction = () => {} } = this;
+    const { deleteInstruction = () => { } } = this;
     const columns = [
       {
         title: "Sr. No.",
@@ -116,18 +115,17 @@ class Instructions_Component extends React.Component {
     }));
     return (
       <Grid container>
-        <Grid item md={12} className="icon">
-          <AddCircleIcon
-            button
-            style={{ fontSize: 40, color: "gray" }}
-            dialog={toggleDialog}
-            onClick={() => {
-              handleOnToggleDialog("Create Instruction", "Create");
-            }}
-          />
-        </Grid>
-        <Grid item md={1}></Grid>
-        <Grid item md={10}>
+        <Grid item md={11} xs={12} sm={12}>
+          <Grid item md={12} xs={12} sm={12} style={{ textAlign: "end" }}>
+            <AddCircleIcon
+              button
+              classes={{ root: "icon-style" }}
+              dialog={toggleDialog}
+              onClick={() => {
+                handleOnToggleDialog("Create Instruction", "Create");
+              }}
+            />
+          </Grid>
           <Paper>
             <Table>
               <TableCell></TableCell>

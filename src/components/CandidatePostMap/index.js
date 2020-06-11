@@ -139,18 +139,18 @@ class CandidatePostMap extends React.Component {
     }));
     return (
       <Grid container>
-        <Grid item md={12} className="icon">
-          <AddCircleIcon
-            button
-            style={{ fontSize: 40, color: "gray" }}
-            dialog={toggleDialog}
-            onClick={() => {
-              handleOnToggleDialog("CandidatePostMap", "Create");
-            }}
-          />
-        </Grid>
-        <Grid item md={1}></Grid>
-        <Grid item md={10}>
+
+        <Grid item md={11} xs={11} sm={11}>
+          <Grid item md={12} xs={12} sm={12} style={{ textAlign: "end" }}>
+            <AddCircleIcon
+              button
+              classes={{ root: "icon-style" }}
+              dialog={toggleDialog}
+              onClick={() => {
+                handleOnToggleDialog("CandidatePostMap", "Create");
+              }}
+            />
+          </Grid>
           <Paper>
             <TableCell></TableCell>
 

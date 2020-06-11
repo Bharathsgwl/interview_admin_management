@@ -105,36 +105,27 @@ class Question_section extends React.Component {
       updated_by: questions[index].updated_by,
       action: (
         <div>
-          <Button
-            onClick={() =>
-              handleOnToggleDialog("Update Question", "Update", index)
-            }
-          >
-            <Icon>edit</Icon>
-          </Button>
-          <Button
-            onClick={e => this.deleteQuestion(e, questions[index].q_uuid)}
-          >
-            {" "}
-            <Icon>delete</Icon>
-          </Button>
+          <Icon style={{ cursor: "pointer" }} onClick={() =>
+            handleOnToggleDialog("Update Question", "Update", index)
+          }
+          >edit</Icon>
+          <Icon style={{ cursor: "pointer" }} onClick={e => this.deleteQuestion(e, questions[index].q_uuid)}>delete</Icon>
         </div>
       )
     }));
     return (
       <Grid container>
-        <Grid item md={12} className="icon">
-          <AddCircleIcon
-            button
-            style={{ fontSize: 40, color: "gray" }}
-            dialog={toggleDialog}
-            onClick={() => {
-              handleOnToggleDialog("Create Question", "CREATE");
-            }}
-          />
-        </Grid>
-        <Grid item md={1}></Grid>
-        <Grid item md={10}>
+        <Grid item md={11} xs={11} sm={11}>
+          <Grid item md={12} xs={12} sm={12} style={{ textAlign: "end" }}>
+            <AddCircleIcon
+              button
+              classes={{ root: "icon-style" }}
+              dialog={toggleDialog}
+              onClick={() => {
+                handleOnToggleDialog("Create Question", "CREATE");
+              }}
+            />
+          </Grid>
           <Paper>
             <Table>
               <TableCell></TableCell>

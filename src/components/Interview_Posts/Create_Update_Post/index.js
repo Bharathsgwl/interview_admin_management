@@ -101,7 +101,7 @@ class Create_Update_Post extends React.Component {
                     <li
                       type="button"
                       class="material-icons"
-                      style={{ float: "right" }}
+                      style={{ float: "right", cursor: "pointer" }}
                       onClick={() => this.handleClose()}
                     >
                       clear

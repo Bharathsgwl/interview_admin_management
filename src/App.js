@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import { Provider } from "react-redux";
 import store from "./redux/store";
-import SpinnerComponent from "./components/SpinnerComponent";
+//import SpinnerComponent from "./components/SpinnerComponent";
 import Menu from "./components/Menu";
 import Login from "./components/Login/index";
 
